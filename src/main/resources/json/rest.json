@@ -1,0 +1,225 @@
+[{
+        "userId": 1,
+        "userName": "admin",
+        "template":
+                {
+                    "id": 0,
+
+                    "name": "Generic identifier for this request for instance, Class_Name.Method_Name",
+
+                    "method": "GET",
+
+                    "url": "http://localhost:9080/service/app",
+
+                    "path": "/",
+
+                    "consumes": [],
+
+                    "produces": ["application/json"],
+
+                    "headers": {},
+
+                    "entity": "",
+
+                    "response": "represents content received from client following a request",
+
+                    "status": 200,
+
+                    "execute": false,
+
+                    "envs": {
+                        "local": "http://localhost:9083/service/app",
+                        "dev": "http://some-dev-host:port/service/app",
+                        "test": "http://some-test-host:port/service/app"
+                    }
+                },
+        "collections": [
+            {
+                "collectionId": 1,
+                "collectionTitle": "Localhost - Users",
+                "endpoints": [
+                    {
+                        "id": 1,
+
+                        "name": "GET_ALL_USERS",
+
+                        "method": "GET",
+
+                        "url": "https://localhost:8081/rws/user",
+
+                        "path": "/user",
+
+                        "consumes": [],
+
+                        "produces": ["application/json"],
+
+                        "headers": {"Tools-Authorization-Token":"3CHxd7m5f/W0mZgGk1ZLYA==&&ZyT5Bd7NCAfoz0nlD2DZgDm6SK7GXLYA"},
+
+                        "entity": "",
+
+                        "response": "represents content received from client following a request",
+
+                        "status": 200,
+
+                        "execute": false
+                    },
+                    {
+                        "id": 2,
+
+                        "name": "GET_USER_BY_ID",
+
+                        "method": "GET",
+
+                        "url": "https://localhost:8081/rws/user/1",
+
+                        "path": "/user/{userId}",
+
+                        "consumes": [],
+
+                        "produces": ["application/json"],
+
+                        "headers": {"Tools-Authorization-Token":"3CHxd7m5f/W0mZgGk1ZLYA==&&ZyT5Bd7NCAfoz0nlD2DZgDm6SK7GXLYA"},
+
+                        "entity": "",
+
+                        "response": "represents content received from client following a request",
+
+                        "status": 200,
+
+                        "execute": false
+                    },
+                    {
+                        "id": 3,
+
+                        "name": "GET_USER_BY_NAME",
+
+                        "method": "GET",
+
+                        "url": "https://localhost:8081/rws/user/admin",
+
+                        "path": "/user/{username}",
+
+                        "consumes": [],
+
+                        "produces": ["application/json"],
+
+                        "headers": {"Tools-Authorization-Token":"3CHxd7m5f/W0mZgGk1ZLYA==&&ZyT5Bd7NCAfoz0nlD2DZgDm6SK7GXLYA"},
+
+                        "entity": "",
+
+                        "response": "represents content received from client following a request",
+
+                        "status": 200,
+
+                        "execute": false
+                    },
+                    {
+                        "id": 4,
+
+                        "name": "CREATE_USER",
+
+                        "method": "POST",
+
+                        "url": "http://localhost:9080/service/app",
+
+                        "path": "/user",
+
+                        "consumes": ["application/x-www-form-urlencoded"],
+
+                        "produces": ["application/json"],
+
+                        "headers": {"user-id":"admin", "access-token":"1346233178"},
+
+                        "entity": "username=super&first-name=Ben&last-name=Thomas&dob=1980-01-01",
+
+                        "response": "represents content received from client following a request",
+
+                        "status": 200,
+
+                        "execute": false
+                    },
+                    {
+                        "id": 5,
+
+                        "name": "UPDATE_USER",
+
+                        "method": "PUT",
+
+                        "url": "http://localhost:9080/service/app",
+
+                        "path": "/user/:id",
+
+                        "consumes": ["application/x-www-form-urlencoded"],
+
+                        "produces": ["application/json"],
+
+                        "headers": {"user-id":"admin", "access-token":"1346233178"},
+
+                        "entity": "first-name=Jim&last-name=Lewis",
+
+                        "response": "represents content received from client following a request",
+
+                        "status": 200,
+
+                        "execute": true
+                    },
+                    {
+                        "id": 6,
+
+                        "name": "DELETE_USER",
+
+                        "method": "DELETE",
+
+                        "url": "http://localhost:9080/service/app",
+
+                        "path": "/user/:id",
+
+                        "consumes": [],
+
+                        "produces": ["application/json"],
+
+                        "headers": {"user-id":"admin", "access-token":"1346233178"},
+
+                        "entity": "",
+
+                        "response": "represents content received from client following a request",
+
+                        "status": 200,
+
+                        "execute": true
+                    }
+                ]
+            },
+            {
+                "collectionId": 2,
+                "collectionTitle": "Localhost - Guests",
+                "endpoints": [
+                    {
+                        "id": 7,
+
+                        "name": "GET_ALL_GUESTS",
+
+                        "method": "GET",
+
+                        "url": "http://localhost:9080/service/app",
+
+                        "path": "/guest",
+
+                        "consumes": [],
+
+                        "produces": ["application/json"],
+
+                        "headers": {"user-id":"admin", "access-token":"1346233178"},
+
+                        "entity": "",
+
+                        "response": "represents content received from client following a request",
+
+                        "status": 200,
+
+                        "execute": false
+                    }
+                ]
+            }
+        ]
+    }]

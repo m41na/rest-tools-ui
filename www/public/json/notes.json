@@ -1,0 +1,43 @@
+[{
+	"userId": 1,
+    "userName": "admin",
+    "notes": [
+    	{
+	    	"noteId": 1,
+	    	"content": "note number 1_1",
+	    	"favorite": false
+    	},
+    	{
+    		"noteId": 2,
+	    	"content": "note number 2_1",
+	    	"favorite": true
+    	},
+    	{
+    		"noteId": 3,
+	    	"content": "note number 3_1",
+	    	"favorite": true
+    	}
+    ]
+},
+{
+	"userId": 2,
+    "userName": "standard",
+    "notes": [
+    	{
+	    	"noteId": 4,
+	    	"content": "note number 1_2",
+	    	"favorite": false
+    	},
+    	{
+    		"noteId": 5,
+	    	"content": "note number 2_2",
+	    	"favorite": true
+    	},
+    	{
+    		"noteId": 6,
+	    	"content": "note number 3_2",
+	    	"favorite": true
+    	}
+    ]
+}
+]

@@ -1,0 +1,83 @@
+[
+    {
+      "userId": 1,
+      "userName": "admin",
+      "lists": [
+          {
+          	"listId": 1,
+          	"listTitle": "DailyThoughts",
+            "selected": false,
+            "tasks" :
+              [
+                {"taskId": 1, "taskName": "Take out the trash", "done": false},
+                {"taskId": 2, "taskName": "Buy bread", "done": false},
+                {"taskId": 3, "taskName": "Teach penguins to fly", "done": true},
+                {"taskId": 4, "taskName": "Climb Kilimanjaro", "done": true},
+                {"taskId": 5, "taskName": "Learn mandarin", "done": false}
+              ]
+          },
+          {
+          	"listId": 2,
+          	"listTitle": "Bucket List",
+            "selected": false,
+            "tasks":
+              [
+                {"taskId": 6, "taskName": "Para-Sail to Australia", "done": false},
+                {"taskId": 7, "taskName": "Skydrive in Baghdad", "done": false},
+                {"taskId": 8, "taskName": "Swim in the dead sea", "done": false}
+              ]
+          },
+          {
+          	"listId": 3,
+          	"listTitle": "House Projects",
+            "selected": false,
+            "tasks":
+              [
+                {"taskId": 9, "taskName": "Hunt down moles", "done": false},
+                {"taskId": 10, "taskName": "Mow yard", "done": false},
+                {"taskId": 11, "taskName": "Control erosion", "done": false}
+              ]
+          }
+      	]
+    },
+    {
+      "userId": 2,
+      "userName": "standard",
+      "lists": [
+          {
+          	"listId": 4,
+          	"listTitle": "Reflections",
+            "selected": false,
+            "tasks" :
+              [
+                {"taskId": 12, "taskName": "Play Wolfenstein", "done": false},
+                {"taskId": 13, "taskName": "Practise meditation", "done": false},
+                {"taskId": 14, "taskName": "Sky Jump", "done": false}
+              ]
+          },
+          {
+          	"listId": 5,
+          	"listTitle": "Office Work",
+            "selected": false,
+            "tasks":
+              [
+                {"taskId": 15, "taskName": "Finish Debugging", "done": false},
+                {"taskId": 16, "taskName": "Submit timesheet", "done": false},
+                {"taskId": 17, "taskName": "Schedule vacation", "done": false},
+                {"taskId": 18, "taskName": "Prepare demo", "done": false}
+              ]
+          },
+          {
+          	"listId": 6,
+          	"listTitle": "Gym",
+            "selected": false,
+            "tasks":
+              [
+                {"taskId": 19, "taskName": "Increase weigths", "done": false},
+                {"taskId": 20, "taskName": "Run a mile further", "done": false},
+                {"taskId": 21, "taskName": "Reach target heart rate", "done": false}
+              ]
+          }
+      	]
+    }
+]
