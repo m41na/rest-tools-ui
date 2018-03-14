@@ -1,35 +1,23 @@
 package com.jarredweb.rest.tools.ui.model;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.UUID;
 import java.util.stream.Collectors;
+import works.hop.rest.tools.api.ApiReq;
 
-public class EndpointsViewMock implements EndpointsViewOps {
+public class EndpointsViewMock implements EndpointsViewModel {
 
-    private long currentUser;
     private long currentCollection;
-    private long currentEndpoint;
+    private String currentEndpoint;
     private String currentMode;
-    private List<UserEndpoints> model;
-    private final AtomicLong idGen = new AtomicLong(7);
+    private UserEndpoints model;
 
-    public EndpointsViewMock(List<UserEndpoints> model) {
+    public EndpointsViewMock(UserEndpoints model) {
         super();
         this.model = model;
-        this.currentUser = model.get(0).getUserId();
-        this.currentCollection = model.get(0).getCollections().get(0).getCollectionId();
-        this.currentEndpoint = model.get(0).getCollections().get(0).getEndpoints().get(0).getId();
+        this.currentCollection = model.getCollections().get(0).getCollectionId();
+        this.currentEndpoint = model.getCollections().get(0).getEndpoints().get(0).getId();
         this.currentMode = "normal";
-    }
-
-    @Override
-    public long getCurrentUser() {
-        return currentUser;
-    }
-
-    @Override
-    public void setCurrentUser(long currentUser) {
-        this.currentUser = currentUser;
     }
 
     @Override
@@ -43,12 +31,12 @@ public class EndpointsViewMock implements EndpointsViewOps {
     }
 
     @Override
-    public long getCurrentEndpoint() {
+    public String getCurrentEndpoint() {
         return currentEndpoint;
     }
 
     @Override
-    public void setCurrentEndpoint(long currentEndpoint) {
+    public void setCurrentEndpoint(String currentEndpoint) {
         this.currentEndpoint = currentEndpoint;
     }
 
@@ -63,54 +51,45 @@ public class EndpointsViewMock implements EndpointsViewOps {
     }
 
     @Override
-    public List<UserEndpoints> getModel() {
+    public UserEndpoints getModel() {
         return model;
     }
 
     @Override
-    public void setModel(List<UserEndpoints> model) {
+    public void setModel(UserEndpoints model) {
         this.model = model;
     }
 
     @Override
-    public List<PairValue> getUsers() {
-        return model.stream().map((UserEndpoints t) -> new PairValue(new Object[]{"userName", t.getUserName(), "userId", t.getUserId()})).collect(Collectors.toList());
+    public List<EndpointsList> getUserCollections() {
+        return model.getCollections();
     }
 
     @Override
-    public List<EndpointsList> getUserCollections(long userId) {
-        return model.stream().filter(t -> {
-            return t.getUserId() == userId;
-        }).findFirst().get().getCollections();
-    }
-
-    @Override
-    public List<PairValue> getCollectionTitles(long userId) {
-        return getUserCollections(userId).stream().map(t -> {
+    public List<PairValue> getCollectionTitles() {
+        return getUserCollections().stream().map(t -> {
             return new PairValue(new Object[]{"collectionTitle", t.getCollectionTitle(), "collectionId", t.getCollectionId()});
         }).collect(Collectors.toList());
     }
 
     @Override
-    public List<Endpoint> getUserEndpoints(long userId, long collectionId) {
-        return getUserCollections(userId).stream().filter(t -> {
+    public List<ApiReq> getUserEndpoints(long collectionId) {
+        return getUserCollections().stream().filter(t -> {
             return t.getCollectionId() == collectionId;
         }).findFirst().get().getEndpoints();
     }
 
     @Override
-    public Endpoint getUserEndpoint(long userId, long collectionId, long endpointId) {
-        return getUserEndpoints(endpointId, endpointId).stream().filter(ep -> {
-            return ep.getId() == endpointId;
+    public ApiReq getUserEndpoint(long collectionId, String endpointId) {
+        return getUserEndpoints(collectionId).stream().filter(ep -> {
+            return ep.getId().equals(endpointId);
         }).findFirst().get();
     }
 
     @Override
-    public void addNewEndpoint(long userId, long collectionId, Endpoint endpoint) {
-        endpoint.setId(idGen.incrementAndGet());
-        List<EndpointsList> endpoints = model.stream().filter(item -> {
-            return item.getUserId() == userId;
-        }).findFirst().get().getCollections();
+    public void addNewEndpoint(long collectionId, ApiReq endpoint) {
+        endpoint.setId(UUID.randomUUID().toString());
+        List<EndpointsList> endpoints = model.getCollections();
 
         endpoints.stream().filter(item -> {
             return item.getCollectionId() == collectionId;
@@ -118,10 +97,10 @@ public class EndpointsViewMock implements EndpointsViewOps {
     }
 
     @Override
-    public void updateEndpoint(long userId, long collectionId, Endpoint endpoint) {
+    public void updateEndpoint(long collectionId, ApiReq endpoint) {
     }
 
     @Override
-    public void dropEndpoint(long userId, long collectionId, long endpointId) {
+    public void dropEndpoint(long collectionId, String endpointId) {
     }
 }

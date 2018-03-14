@@ -1,12 +1,13 @@
 package com.jarredweb.rest.tools.ui.model;
 
 import java.util.List;
+import works.hop.rest.tools.api.ApiReq;
 
 public class EndpointsList {
 
     private long collectionId;
     private String collectionTitle;
-    private List<Endpoint> endpoints;
+    private List<ApiReq> endpoints;
 
     public long getCollectionId() {
         return collectionId;
@@ -24,11 +25,11 @@ public class EndpointsList {
         this.collectionTitle = title;
     }
 
-    public List<Endpoint> getEndpoints() {
+    public List<ApiReq> getEndpoints() {
         return endpoints;
     }
 
-    public void setEndpoints(List<Endpoint> endpoints) {
+    public void setEndpoints(List<ApiReq> endpoints) {
         this.endpoints = endpoints;
     }
 }

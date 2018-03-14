@@ -1,5 +1,5 @@
-<#macro restrequest>
-<#assign item = content.getUserEndpoint(content.currentUser, content.currentCollection, content.currentEndpoint)/>
+<#macro restrequest content>
+<#assign item = content.getUserEndpoint(content.currentCollection, content.currentEndpoint)/>
 <#assign methods = ['GET','POST','PUT','DELETE','OPTIONS','HEAD','PATCH','JSONP']>
 <div class="panel panel-default">
     <style scoped>
@@ -24,7 +24,7 @@
         </h4>
     </div>
     <div class="panel-body">
-        <form role="form" class="form-horizontal" onsubmit="RestRequest.submitEndpoint(event);return false;">
+        <form id="endpoint-form" role="form" class="form-horizontal">
             <div class="form-group">
                 <label class="col-sm-3 control-label" for="url">URL</label>
                 <div class="col-sm-9"><input name="url" class="form-control" id="url" placeholder="https://localhost:8081/rws/mvn/rest/endpoint" type="text" value="${item.url}"></div>
@@ -33,23 +33,23 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label" for="method">Method</label>
                 <div class="col-sm-6">
-                    <select class="form-control" name="method" onchange="RestRequest.notifyChange(this)">
+                    <select class="form-control" name="method" onchange="(function(e){RestRequest.notifyChange(e);})(event)">
                         <#list methods as method >
                         <option <#if item.method?matches(method, 'i')>selected</#if>>${method}</option>
                         </#list>
                     </select>
                 </div>
-                <div class="col-sm-3"><button type="submit" class="btn btn-primary">Send Request</button></div>
+                <div class="col-sm-3"><button type="button" onclick="(function(e){RestRequest.submitEndpoint(e);})(event)" class="btn btn-primary">Send Request</button></div>
             </div>
 
-            <label class="col-sm-12 sub-section" for="description-input" onclick="RestRequest.toggleInputs(this)"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span> Description</label>
+            <label class="col-sm-12 sub-section" for="description-input" onclick="(function(e){RestRequest.toggleInputs(e);}(event)"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span> Description</label>
             <div style="display:none;" class="form-group" id="description-input">
                 <div class="col-sm-12">
                     <textarea class="form-control" name="description" rows="10"></textarea>
                 </div>
             </div>
 
-            <label class="col-sm-12 sub-section" for="headers-input" onclick="RestRequest.toggleInputs(this)"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span> Headers</label>
+            <label class="col-sm-12 sub-section" for="headers-input" onclick="(function(e){RestRequest.toggleInputs(e);})(event)"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span> Headers</label>
             <div style="display:none;" class="form-group" id="headers-input">           
                 <#if item.headers?size gt 0>
                 <ul class="headers-list">
@@ -62,7 +62,7 @@
                             <input type="text" class="form-control" name="headerValue" value="${item.headers[key]}" placeholder="Value">
                         </div>
                         <div class="col-sm-1">
-                            <button type="button" class="btn btn-danger btn-sm" aria-label="Left Align" onclick="RestRequest.removeHeader(this)">
+                            <button type="button" class="btn btn-danger btn-sm" aria-label="Left Align" onclick="(function(e){RestRequest.removeHeader(e);})(event)">
                                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                             </button>
                         </div>
@@ -73,13 +73,13 @@
                 </#if>
 
                 <div class="col-sm-12">
-                    <button type="button" class="btn btn-default btn-sm" aria-label="Left Align" style="border:none;" onclick="RestRequest.addHeader()">
+                    <button type="button" class="btn btn-default btn-sm" aria-label="Left Align" style="border:none;" onclick="(function(e){RestRequest.addHeader();})(event)">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;&nbsp;Add Header
                     </button>
                 </div>
             </div>
 
-            <label class="col-sm-12 sub-section" for="basic-auth-input" onclick="RestRequest.toggleInputs(this)"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span> Basic Auth</label>
+            <label class="col-sm-12 sub-section" for="basic-auth-input" onclick="(function(e){RestRequest.toggleInputs(e);})(event)"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span> Basic Auth</label>
             <div style="display:none;" class="form-group" id="basic-auth-input">
                 <div class="col-sm-6">
                     <input type="text" class="form-control" id="basic-username" placeholder="Username">
@@ -115,100 +115,4 @@
         </form>
     </div>
 </div>
-
-<script>
- (function(){
-	
-       //singleton function
-        function RestRequest(){};
-	 
-        //select tasks list
-        RestRequest.prototype.toggleInputs = function(el){
-            var selector = $(el).attr('for');
-            $("#" + selector).toggle();
-            $('span', el).toggleClass('glyphicon-chevron-up glyphicon-chevron-down');
-        }
-            
-        RestRequest.prototype.addHeader = function(){
-            $("ul li.headers-list-item:first").clone().appendTo("ul.headers-list");
-        }
-            
-        RestRequest.prototype.removeHeader = function(el){
-            $(el).closest("li").remove();
-        }
-            
-        RestRequest.prototype.notifyChange = function(el){
-            $(".request-body-container").toggle($(el).val() == 'POST')
-        }
-            
-        RestRequest.prototype.submitRequest = function(ev){
-            var form = $(ev.target);
-            $.ajax({
-                url: $("[name='url']", form).val(),
-                type: $("[name='method']", form).val(),
-                data: $("[name='endpoint']", form).val(),
-                dataType: 'json',
-                beforeSend: function(xhr){
-                    $("[name='headerName']", form).each(function(i, e){
-                        var header = $(this).val();
-                        var value = $("[name='headerValue']", e.closest("li")).val();
-                        xhr.setRequestHeader(header, value);
-                    });
-                },
-                success: function(data, status, xhr){
-                    EventBus.trigger('endpoint', 'response-body', {method: $("[name='method']", form).val(), url: $("[name='url']", form).val(), status: status, data: data});
-                },
-                error: function(xhr, status, err){
-                    EventBus.trigger('endpoint', 'response-body', {method: $("[name='method']", form).val(), url: $("[name='url']", form).val(), status: status, data: err});
-                }
-            });
-            return false;
-        }
-        
-        RestRequest.prototype.submitEndpoint = function(ev){
-            var form = $(ev.target);
-            var endpoint = {
-                url: $("[name='url']", form).val(),
-                method: $("[name='method']", form).val(),
-                description: $("[name='description']", form).val(),
-                headers: function(){
-                    var result = {};
-                    $("[name='headerName']", form).each(function(i, e){
-                        var header = $(this).val();
-                        var value = $("[name='headerValue']", e.closest("li")).val();
-                        if(result[header] !== undefined){
-                            result[header] = result[header].concat(";").concat(value);
-                        }
-                        else{
-                            result[header] = value;
-                        }
-                    });    
-                    return result;
-                }(),
-                entity: $("[name='endpoint']", form).val()
-            };
-                
-            $.ajax({
-                url: "https://localhost:8081/rws/mvc/rest/endpoint",
-                type: "POST",
-                data: JSON.stringify(endpoint),
-                dataType: 'json',
-                headers: {
-                	"Tools-Authorization-Token":"b4AtQMdJElAXPcLvanaHVQ==&&6JfuWXEmJH1dBgnO2r9d2O4F3jAB5zaf",
-                	"Content-Type":"application/json",
-                        "Accepts":"application/json"
-                },
-                success: function(data, status, xhr){
-                    EventBus.trigger('endpoint', 'response-body', {method: "POST", url: "https://localhost:8081/rws/mvc/rest/endpoint", status: status, data: data});
-                },
-                error: function(xhr, status, err){
-                    EventBus.trigger('endpoint', 'response-body', {method: "POST", url: "https://localhost:8081/rws/mvc/rest/endpoint", status: status, data: err});
-                }
-            });
-            return false;
-        }
-	 
-        window.RestRequest = new RestRequest();
-})();
-    </script>
 </#macro>

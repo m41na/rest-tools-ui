@@ -12,10 +12,18 @@
     </properties>
     
     <dependencies>
+        <!-- web framework -->
         <dependency>
             <groupId>com.jarredweb.repo</groupId>
             <artifactId>webjar-http</artifactId>
             <version>0.4.1-beta</version>
+        </dependency>
+        
+        <!-- rest tools -->
+        <dependency>
+            <groupId>works.hop</groupId>
+            <artifactId>rest-tools</artifactId>
+            <version>0.1</version>
         </dependency>
         
         <!-- unit testing -->

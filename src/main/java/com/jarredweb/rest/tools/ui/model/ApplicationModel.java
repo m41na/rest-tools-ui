@@ -27,7 +27,8 @@ public class ApplicationModel {
 
     public Navigation buildNavModel(UriInfo uriInfo) {
         List<RouteLink> links = new ArrayList<>();
-        links.add(new RouteLink("Rest Client", uriInfo.getBaseUriBuilder().path("mvc/rest").build().toASCIIString()));
+        links.add(new RouteLink("Rest Client", uriInfo.getBaseUriBuilder().path("/restview").build().toASCIIString()));
+        links.add(new RouteLink("Work Notes", uriInfo.getBaseUriBuilder().path("/notesview").build().toASCIIString()));
         return new Navigation("Simple Tools", links);
     }
 }
