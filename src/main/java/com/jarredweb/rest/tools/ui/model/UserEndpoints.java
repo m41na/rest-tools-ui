@@ -1,5 +1,6 @@
 package com.jarredweb.rest.tools.ui.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import works.hop.rest.tools.api.ApiReq;
 import works.hop.rest.tools.client.RestConnector;
@@ -9,7 +10,7 @@ public class UserEndpoints {
     private long userId;
     private String userName;
     private ApiReq template;
-    private List<EndpointsList> collections;
+    private List<EndpointsList> collections = new ArrayList<>();
     private boolean merged = false;
 
     public long getUserId() {
@@ -37,6 +38,18 @@ public class UserEndpoints {
     }
 
     public List<EndpointsList> getCollections() {
+        return collections;
+    }
+
+    public void setCollections(List<EndpointsList> collections) {
+        this.collections = collections;
+    }
+
+    public boolean isMerged() {
+        return merged;
+    }
+
+    public List<EndpointsList> getMergedCollections() {
         if(!merged){
             this.collections.stream().forEach((list) -> {
                 List<ApiReq> endpoints = list.getEndpoints();
@@ -45,9 +58,5 @@ public class UserEndpoints {
             });
         }
         return collections;
-    }
-
-    public void setCollections(List<EndpointsList> collections) {
-        this.collections = collections;
     }
 }

@@ -3,7 +3,7 @@
         "userName": "admin",
         "template":
                 {
-                    "id": 0,
+                    "id": 1,
                     "name": "template",
                     "descr": "testing grid endpoints",
                     "method": "GET",
@@ -29,19 +29,19 @@
                 "collectionTitle": "Localhost - Users",
                 "endpoints": [
                     {
-                        "id": 1,
+                        "id": 2,
                         "name": "GET_HOME",
                         "path": "/",
                         "execute": false
                     },
                     {
-                        "id": 2,
-                        "name": "CKECK_LOGIN",
+                        "id": 3,
+                        "name": "CHECK_LOGIN",
                         "path": "/check",
                         "execute": false
                     },
                     {
-                        "id": 3,
+                        "id": 4,
                         "name": "POST_LOGIN",
                         "path": "/login",
                         "method": "POST",
@@ -55,7 +55,7 @@
                         "execute": false
                     },
                     {
-                        "id": 4,
+                        "id": 5,
                         "name": "GET_GAMES",
                         "path": "/game",
                         "method": "GET",
@@ -69,7 +69,7 @@
                         "execute": false
                     },
                     {
-                        "id": 5,
+                        "id": 6,
                         "name": "GET_GAME_BY_ID",
                         "path": "/game/2",
                         "method": "GET",

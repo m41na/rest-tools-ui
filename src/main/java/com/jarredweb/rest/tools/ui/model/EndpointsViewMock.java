@@ -15,8 +15,8 @@ public class EndpointsViewMock implements EndpointsViewModel {
     public EndpointsViewMock(UserEndpoints model) {
         super();
         this.model = model;
-        this.currentCollection = model.getCollections().get(0).getCollectionId();
-        this.currentEndpoint = model.getCollections().get(0).getEndpoints().get(0).getId();
+        this.currentCollection = model.getMergedCollections().get(0).getCollectionId();
+        this.currentEndpoint = model.getMergedCollections().get(0).getEndpoints().get(0).getId();
         this.currentMode = "normal";
     }
 
@@ -62,7 +62,7 @@ public class EndpointsViewMock implements EndpointsViewModel {
 
     @Override
     public List<EndpointsList> getUserCollections() {
-        return model.getCollections();
+        return model.getMergedCollections();
     }
 
     @Override
@@ -89,7 +89,7 @@ public class EndpointsViewMock implements EndpointsViewModel {
     @Override
     public void addNewEndpoint(long collectionId, ApiReq endpoint) {
         endpoint.setId(UUID.randomUUID().toString());
-        List<EndpointsList> endpoints = model.getCollections();
+        List<EndpointsList> endpoints = model.getMergedCollections();
 
         endpoints.stream().filter(item -> {
             return item.getCollectionId() == collectionId;
