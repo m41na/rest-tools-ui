@@ -1,8 +1,8 @@
 package com.jarredweb.rest.tools.ui.persist;
 
-import com.jarredweb.rest.tools.ui.common.AppResult;
 import com.jarredweb.rest.tools.ui.model.EndpointsList;
 import com.jarredweb.rest.tools.ui.model.UserEndpoints;
+import com.jarredweb.webjar.common.bean.AppResult;
 import works.hop.rest.tools.api.ApiReq;
 
 public interface UserEndpointsDao {

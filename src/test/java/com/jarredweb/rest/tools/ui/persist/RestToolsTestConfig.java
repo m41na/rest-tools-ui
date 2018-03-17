@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-public class PersistTestConfig {
+public class RestToolsTestConfig {
     
     @Bean
     public DataSource dataSource() {

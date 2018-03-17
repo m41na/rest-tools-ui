@@ -1,8 +1,8 @@
 package com.jarredweb.rest.tools.ui.persist;
 
-import com.jarredweb.rest.tools.ui.common.AppResult;
 import com.jarredweb.rest.tools.ui.persist.entity.Account;
 import com.jarredweb.rest.tools.ui.persist.entity.Profile;
+import com.jarredweb.webjar.common.bean.AppResult;
 import java.util.List;
 
 public interface UserAccountDao {

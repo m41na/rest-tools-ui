@@ -7,8 +7,8 @@ public class Account {
     private long id;
     private String username;
     private String password;
-    private Role role;
-    private Status status;
+    private AccRole role;
+    private AccStatus status;
     private Profile profile;
     private Date createdTs;
 
@@ -36,19 +36,19 @@ public class Account {
         this.password = password;
     }
 
-    public Role getRole() {
+    public AccRole getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(AccRole role) {
         this.role = role;
     }
 
-    public Status getStatus() {
+    public AccStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(AccStatus status) {
         this.status = status;
     }
 

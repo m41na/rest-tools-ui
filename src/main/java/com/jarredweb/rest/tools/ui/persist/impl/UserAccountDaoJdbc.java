@@ -1,11 +1,11 @@
 package com.jarredweb.rest.tools.ui.persist.impl;
 
-import com.jarredweb.rest.tools.ui.common.AppResult;
 import com.jarredweb.rest.tools.ui.persist.UserAccountDao;
 import com.jarredweb.rest.tools.ui.persist.entity.Account;
 import com.jarredweb.rest.tools.ui.persist.entity.Profile;
-import com.jarredweb.rest.tools.ui.persist.entity.Role;
-import com.jarredweb.rest.tools.ui.persist.entity.Status;
+import com.jarredweb.rest.tools.ui.persist.entity.AccRole;
+import com.jarredweb.rest.tools.ui.persist.entity.AccStatus;
+import com.jarredweb.webjar.common.bean.AppResult;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -201,8 +201,8 @@ public class UserAccountDaoJdbc implements UserAccountDao {
             acc.setId(rs.getLong("account_id"));
             acc.setUsername(rs.getString("username"));
             acc.setPassword(rs.getString("password"));
-            acc.setStatus(Status.valueOf(rs.getString("acc_status")));
-            acc.setRole(Role.valueOf(rs.getString("acc_role")));
+            acc.setStatus(AccStatus.valueOf(rs.getString("acc_status")));
+            acc.setRole(AccRole.valueOf(rs.getString("acc_role")));
             acc.setCreatedTs(new Date(rs.getDate("account_created_ts").getTime()));
             Profile user = new Profile();
             user.setId(rs.getLong("fk_profile_id"));

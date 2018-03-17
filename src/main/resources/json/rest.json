@@ -1,124 +1,123 @@
 [{
-        "userId": 1,
-        "userName": "admin",
-        "template":
+    "userId": 1,
+    "userName": "admin",
+    "template": {
+        "id": 1,
+        "name": "template",
+        "descr": "testing grid endpoints",
+        "method": "GET",
+        "path": "/",
+        "consumes": "",
+        "produces": "application/json",
+        "headers": {},
+        "entity": "",
+        "authorized": [],
+        "response": {},
+        "assertions": [],
+        "url": "http://localhost:4567",
+        "envs": {
+            "local": "http://localhost:9083/rest/app",
+            "dev": "http://some-dev-host:port/rest/app",
+            "test": "http://some-test-host:port/rest/app"
+        },
+        "execute": false
+    },
+    "collections": [
+        {
+            "collectionId": 1,
+            "collectionTitle": "Localhost - Users",
+            "endpoints": [
                 {
-                    "id": 1,
-                    "name": "template",
-                    "descr": "testing grid endpoints",
-                    "method": "GET",
+                    "id": 2,
+                    "name": "GET_HOME",
                     "path": "/",
-                    "consumes": "",
+                    "execute": false
+                },
+                {
+                    "id": 3,
+                    "name": "CHECK_LOGIN",
+                    "path": "/check",
+                    "execute": false
+                },
+                {
+                    "id": 4,
+                    "name": "POST_LOGIN",
+                    "path": "/login",
+                    "method": "POST",
+                    "consumes": "application/json",
                     "produces": "application/json",
-                    "headers": {},
-                    "entity": "",
-                    "authorized": [],
-                    "response": {},
-                    "assertions": [],
-                    "url": "http://localhost:4567",
-                    "envs": {
-                        "local": "http://localhost:9083/rest/app",
-                        "dev": "http://some-dev-host:port/rest/app",
-                        "test": "http://some-test-host:port/rest/app"
+                    "entity": "username=admin&password=admin",
+                    "headers": {
+                        "host": "localhost:4567",
+                        "X-Requested-With": "XMLHttpRequest"
                     },
                     "execute": false
                 },
-        "collections": [
-            {
-                "collectionId": 1,
-                "collectionTitle": "Localhost - Users",
-                "endpoints": [
-                    {
-                        "id": 2,
-                        "name": "GET_HOME",
-                        "path": "/",
-                        "execute": false
+                {
+                    "id": 5,
+                    "name": "GET_GAMES",
+                    "path": "/game",
+                    "method": "GET",
+                    "produces": "application/json",
+                    "headers": {
+                        "host": "localhost:4567",
+                        "X-Requested-With": "XMLHttpRequest",
+                        "Cookie": "JSESSIONID=t44nvwitsi131fyp97cbc2za8;Path=/",
+                        "xah-user-id": "1"
                     },
-                    {
-                        "id": 3,
-                        "name": "CHECK_LOGIN",
-                        "path": "/check",
-                        "execute": false
+                    "execute": false
+                },
+                {
+                    "id": 6,
+                    "name": "GET_GAME_BY_ID",
+                    "path": "/game/2",
+                    "method": "GET",
+                    "produces": "application/json",
+                    "headers": {
+                        "host": "localhost:4567",
+                        "X-Requested-With": "XMLHttpRequest",
+                        "Cookie": "JSESSIONID=t44nvwitsi131fyp97cbc2za8;Path=/",
+                        "xah-user-id": "1"
                     },
-                    {
-                        "id": 4,
-                        "name": "POST_LOGIN",
-                        "path": "/login",
-                        "method": "POST",
-                        "consumes": "application/json",
-                        "produces": "application/json",
-                        "entity": "username=admin&password=admin",
-                        "headers": {
-                            "host": "localhost:4567",
-                            "X-Requested-With": "XMLHttpRequest"
+                    "execute": true,
+                    "assertions": [
+                        {
+                            "assertType": "assertContains",
+                            "failMessage": "expecting to find a number 20 in the text",
+                            "expectedValue": "20",
+                            "actualValue": "questions[0].question"
                         },
-                        "execute": false
+                        {
+                            "assertType": "assertEquals",
+                            "failMessage": "expecting user id value of 1",
+                            "expectedValue": "1",
+                            "actualValue": "userId"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "collectionId": 2,
+            "collectionTitle": "Localhost - Guests",
+            "endpoints": [
+                {
+                    "id": 7,
+                    "name": "GET_ALL_GUESTS",
+                    "method": "GET",
+                    "url": "http://localhost:9080/service/app",
+                    "path": "/guest",
+                    "consumes": "",
+                    "produces": "application/json",
+                    "headers": {
+                        "user-id": "admin",
+                        "access-token": "1346233178"
                     },
-                    {
-                        "id": 5,
-                        "name": "GET_GAMES",
-                        "path": "/game",
-                        "method": "GET",
-                        "produces": "application/json",
-                        "headers": {
-                            "host": "localhost:4567",
-                            "X-Requested-With": "XMLHttpRequest",
-                            "Cookie": "JSESSIONID=t44nvwitsi131fyp97cbc2za8;Path=/",
-                            "xah-user-id": "1"
-                        },
-                        "execute": false
-                    },
-                    {
-                        "id": 6,
-                        "name": "GET_GAME_BY_ID",
-                        "path": "/game/2",
-                        "method": "GET",
-                        "produces": "application/json",
-                        "headers": {
-                            "host": "localhost:4567",
-                            "X-Requested-With": "XMLHttpRequest",
-                            "Cookie": "JSESSIONID=t44nvwitsi131fyp97cbc2za8;Path=/",
-                            "xah-user-id": "1"
-                        },
-                        "execute": true,
-                        "assertions": [
-                            {
-                                "assertType": "assertContains",
-                                "failMessage": "expecting to find a number 20 in the text",
-                                "expectedValue": "20",
-                                "actualValue": "questions[0].question"
-                            },
-                            {
-                                "assertType": "assertEquals",
-                                "failMessage": "expecting user id value of 1",
-                                "expectedValue": "1",
-                                "actualValue": "userId"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "collectionId": 2,
-                "collectionTitle": "Localhost - Guests",
-                "endpoints": [
-                    {
-                        "id": 7,
-                        "name": "GET_ALL_GUESTS",
-                        "method": "GET",
-                        "url": "http://localhost:9080/service/app",
-                        "path": "/guest",
-                        "consumes": "",
-                        "produces": "application/json",
-                        "headers": {
-                            "user-id": "admin",
-                            "access-token": "1346233178"
-                        },
-                        "entity": "",
-                        "response": {},
-                        "execute": false
-                    }
-                ]
-            }
-        ]
-    }]
+                    "entity": "",
+                    "response": {},
+                    "execute": false
+                }
+            ]
+        }
+    ]
+}]

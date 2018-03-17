@@ -1,10 +1,10 @@
 package com.jarredweb.rest.tools.ui.persist.impl;
 
-import com.jarredweb.rest.tools.ui.common.AppResult;
 import com.jarredweb.rest.tools.ui.model.EndpointsList;
 import com.jarredweb.rest.tools.ui.model.UserEndpoints;
-import com.jarredweb.rest.tools.ui.persist.PersistTestConfig;
+import com.jarredweb.rest.tools.ui.persist.RestToolsTestConfig;
 import com.jarredweb.rest.tools.ui.persist.UserEndpointsDao;
+import com.jarredweb.webjar.common.bean.AppResult;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +19,7 @@ import works.hop.rest.tools.api.ApiReq;
 
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = PersistTestConfig.class, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = RestToolsTestConfig.class, loader = AnnotationConfigContextLoader.class)
 @Sql({ "/sql/create-tables.sql" })
 @Sql(scripts = "/sql/insert-data.sql", config = @SqlConfig(commentPrefix = "--"))
 public class UserEndpointsDaoJdbcTest {

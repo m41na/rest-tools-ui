@@ -1,11 +1,11 @@
 package com.jarredweb.rest.tools.ui.persist.impl;
 
-import com.jarredweb.rest.tools.ui.common.AppResult;
 import com.jarredweb.rest.tools.ui.persist.UserAccountDao;
 import com.jarredweb.rest.tools.ui.persist.entity.Account;
 import com.jarredweb.rest.tools.ui.persist.entity.Profile;
-import com.jarredweb.rest.tools.ui.persist.entity.Role;
-import com.jarredweb.rest.tools.ui.persist.entity.Status;
+import com.jarredweb.rest.tools.ui.persist.entity.AccRole;
+import com.jarredweb.rest.tools.ui.persist.entity.AccStatus;
+import com.jarredweb.webjar.common.bean.AppResult;
 import static org.junit.Assert.assertNotNull;
 
 import java.sql.ResultSetMetaData;
@@ -41,8 +41,8 @@ public class DaoUtils {
 		account.setUsername(DaoUtils.randomAlphaNumeric(10));
 		account.setPassword(DaoUtils.randomAlphaNumeric(15));
 		account.setProfile(profile);
-		account.setRole(Role.guest);
-		account.setStatus(Status.active);
+		account.setRole(AccRole.guest);
+		account.setStatus(AccStatus.active);
 		AppResult<Account> result = dao.register(account);
 		assertNotNull(result.getEntity());
 		return result.getEntity();
