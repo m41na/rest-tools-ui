@@ -36,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-public class StartupServiceImpl implements StartupService{
+public class StartupServiceImpl implements StartupService {
 
     private static final Logger LOG = LoggerFactory.getLogger(StartupServiceImpl.class);
 
@@ -48,7 +48,7 @@ public class StartupServiceImpl implements StartupService{
     private DataSource dataSource;
 
     private Properties props = null;
-    
+
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void initialize() {
@@ -64,14 +64,14 @@ public class StartupServiceImpl implements StartupService{
             LOG.error(e.getMessage());
             throw new AppException(new ResStatus(1, "could not locate properties file to intialize application", e.getMessage()));
         }
-        
-        // 3. initialize database schema
-        ResourceDatabasePopulator rdp = new ResourceDatabasePopulator();
-        rdp.addScript(new ClassPathResource("sql/update-schema.sql"));
-        rdp.execute(dataSource);
 
-        // 4. check initialized property
+        // 3. check initialized property
         if ("true".equals(props.getProperty("app.jdbc.configure")) && "false".equals(props.getProperty("app.initialized"))) {
+
+            // 4. initialize database schema
+            ResourceDatabasePopulator schema = new ResourceDatabasePopulator();
+            schema.addScript(new ClassPathResource("sql/update-schema.sql"));
+            schema.execute(dataSource);
 
             // 5. check if default admin user exists
             Account account = getUserAccount(props.getProperty("app.admin.username"));
@@ -85,7 +85,7 @@ public class StartupServiceImpl implements StartupService{
                 AppResult<Profile> createResult = userDao.register(user);
 
                 Profile profile = createResult.getEntity();
-                
+
                 account = new Account();
                 account.setProfile(profile);
                 account.setUsername(props.getProperty("app.admin.username"));
@@ -103,22 +103,27 @@ public class StartupServiceImpl implements StartupService{
 
                     LOG.info("new '{}' account registered", account.getUsername());
                 }
-                
+
                 //8. Add default data from json
                 ObjectMapper mapper = new ObjectMapper();
-                try(InputStream src = getClass().getClassLoader().getResourceAsStream("json/rest.json")) {
+                try (InputStream src = getClass().getClassLoader().getResourceAsStream("json/rest.json")) {
                     List<UserEndpoints> endpoints = mapper.readValue(src, new TypeReference<List<UserEndpoints>>() {
                     });
-                    
-                    endpoints.get(0).getMergedCollections().stream().forEach(endp->{
+
+                    endpoints.get(0).getMergedCollections().stream().forEach(endp -> {
                         endpDao.createCollection(endp, profile.getId());
                     });
                 } catch (IOException e) {
                     LOG.error("There was a problem saving the collection", e);
                 }
             }
-            
-            // 9. all clear - update initialized flag
+        
+            // 9. populate with initial data
+            ResourceDatabasePopulator dbdata = new ResourceDatabasePopulator();
+            dbdata.addScript(new ClassPathResource("sql/insert-data.sql"));
+            dbdata.execute(dataSource);
+
+            // 10. all clear - update initialized flag
             onInitialized();
         }
     }
