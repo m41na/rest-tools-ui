@@ -7,7 +7,6 @@ import com.jarredweb.rest.tools.ui.model.UserEndpoints;
 import com.jarredweb.rest.tools.ui.persist.UserEndpointsDao;
 import com.jarredweb.rest.tools.ui.service.EndpointsService;
 import com.jarredweb.webjar.common.bean.AppResult;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
@@ -23,7 +22,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -49,7 +47,7 @@ public class RestToolsResource {
     private UriInfo uriInfo;
     private final ApplicationModel appModel = ApplicationModel.getInstance();
     @Inject
-    @Named("mock")
+    @Named("persist")
     private EndpointsService service;
     @Inject
     private UserEndpointsDao endpDao;
@@ -134,11 +132,15 @@ public class RestToolsResource {
     @PermitAll
     public Response downloadEndpoints(@PathParam("uid") Long userId) {
         UserEndpoints uep = endpDao.retrieveUserEndpoints(userId).getEntity();
-        StreamingOutput fileStream = (OutputStream output) -> {
+        
+        //prepare response
+        StreamingOutput outputStream = (OutputStream output) -> {
             String json = SimpleJson.toJson(uep);
             output.write(json.getBytes());
         };
-        return Response.ok(fileStream, MediaType.APPLICATION_OCTET_STREAM)
+        
+        //send response
+        return Response.ok(outputStream, MediaType.APPLICATION_OCTET_STREAM)
                 .header("content-disposition", "attachment; filename = rest-file.json")
                 .build();
     }

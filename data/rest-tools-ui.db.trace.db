@@ -1,0 +1,68 @@
+2018-03-16 22:07:53 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "TBL_ACCOUNT" not found; SQL statement:
+SELECT * FROM tbl_account a inner join tbl_profile p on a.fk_profile_id = p.profile_id WHERE username=? [42102-195]
+2018-03-16 22:39:28 database: wrong user or password; user: "SA"
+org.h2.message.DbException: Wrong user name or password [28000-195]
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.message.DbException.get(DbException.java:144)
+	at org.h2.engine.Engine.openSession(Engine.java:104)
+	at org.h2.engine.Engine.openSession(Engine.java:176)
+	at org.h2.engine.Engine.createSessionAndValidate(Engine.java:154)
+	at org.h2.engine.Engine.createSession(Engine.java:137)
+	at org.h2.engine.Engine.createSession(Engine.java:27)
+	at org.h2.engine.SessionRemote.connectEmbeddedOrServer(SessionRemote.java:354)
+	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:116)
+	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:100)
+	at org.h2.Driver.connect(Driver.java:69)
+	at org.h2.server.web.WebServer.getConnection(WebServer.java:735)
+	at org.h2.server.web.WebApp.login(WebApp.java:947)
+	at org.h2.server.web.WebApp.process(WebApp.java:210)
+	at org.h2.server.web.WebApp.processRequest(WebApp.java:169)
+	at org.h2.server.web.WebThread.process(WebThread.java:133)
+	at org.h2.server.web.WebThread.run(WebThread.java:89)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: org.h2.jdbc.JdbcSQLException: Wrong user name or password [28000-195]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	... 19 more
+2018-03-16 22:40:12 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "TBL_ENDPOINT_ASSERT[*] E"; expected "TRUNCATE, {"; SQL statement:
+TBL_ENDPOINT_ASSERT E [42001-195]
+2018-03-16 22:41:23 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "TBL_ENDPOINT_ITEM[*]"; expected "TRUNCATE, {"; SQL statement:
+TBL_ENDPOINT_ITEM [42001-195]
+2018-03-16 22:42:02 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Constraint "UNQ_COLLECTION_ENDPOINT" already exists; SQL statement:
+ALTER TABLE tbl_endpoint_item ADD CONSTRAINT unq_collection_endpoint UNIQUE (fk_parent_list, endp_id) [90045-195]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.command.ddl.AlterTableAddConstraint.tryUpdate(AlterTableAddConstraint.java:109)
+	at org.h2.command.ddl.AlterTableAddConstraint.update(AlterTableAddConstraint.java:77)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:101)
+	at org.h2.command.Command.executeUpdate(Command.java:260)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:193)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:165)
+	at org.apache.commons.dbcp2.DelegatingStatement.execute(DelegatingStatement.java:290)
+	at org.apache.commons.dbcp2.DelegatingStatement.execute(DelegatingStatement.java:290)
+	at org.springframework.jdbc.datasource.init.ScriptUtils.executeSqlScript(ScriptUtils.java:471)
+	at org.springframework.jdbc.datasource.init.ResourceDatabasePopulator.populate(ResourceDatabasePopulator.java:240)
+	at org.springframework.jdbc.datasource.init.DatabasePopulatorUtils.execute(DatabasePopulatorUtils.java:48)
+	at org.springframework.jdbc.datasource.init.ResourceDatabasePopulator.execute(ResourceDatabasePopulator.java:255)
+	at com.jarredweb.rest.tools.ui.service.impl.StartupServiceImpl.initialize(StartupServiceImpl.java:71)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:338)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:197)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:294)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:98)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:212)
+	at com.sun.proxy.$Proxy28.initialize(Unknown Source)
+	at com.jarredweb.rest.tools.ui.app.ToolsRunner.initStartupService(ToolsRunner.java:19)
+	at com.jarredweb.webjar.http.app.AppRunnerBuilder.create(AppRunnerBuilder.java:89)
+	at com.jarredweb.webjar.http.app.AppRunnerBuilder.create(AppRunnerBuilder.java:67)
+	at com.jarredweb.rest.tools.ui.app.ToolsRunner.main(ToolsRunner.java:27)

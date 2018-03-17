@@ -62,9 +62,9 @@ create table if not exists tbl_endpoint_item(
  );
 
 --add unique constraint
-ALTER TABLE tbl_endpoint_item ADD CONSTRAINT unq_collection_endpoint UNIQUE (fk_parent_list, endp_id);
+ALTER TABLE tbl_endpoint_item ADD CONSTRAINT IF NOT EXISTS unq_collection_endpoint UNIQUE (fk_parent_list, endp_id);
 --add foreign key constraint with cascade on delete
-ALTER TABLE tbl_endpoint_item ADD CONSTRAINT fk_endpoint_for_collection FOREIGN KEY (fk_parent_list) REFERENCES tbl_endpoints_list (list_id) ON DELETE CASCADE;
+ALTER TABLE tbl_endpoint_item ADD CONSTRAINT IF NOT EXISTS fk_endpoint_for_collection FOREIGN KEY (fk_parent_list) REFERENCES tbl_endpoints_list (list_id) ON DELETE CASCADE;
 
 --create tbl_todo_item table--
 create table if not exists tbl_endpoint_assert(

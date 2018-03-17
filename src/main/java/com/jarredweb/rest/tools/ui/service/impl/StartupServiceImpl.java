@@ -24,9 +24,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +44,8 @@ public class StartupServiceImpl implements StartupService{
     private UserAccountDao userDao;
     @Autowired
     private UserEndpointsDao endpDao;
+    @Autowired
+    private DataSource dataSource;
 
     private Properties props = null;
     
@@ -59,15 +64,20 @@ public class StartupServiceImpl implements StartupService{
             LOG.error(e.getMessage());
             throw new AppException(new ResStatus(1, "could not locate properties file to intialize application", e.getMessage()));
         }
+        
+        // 3. initialize database schema
+        ResourceDatabasePopulator rdp = new ResourceDatabasePopulator();
+        rdp.addScript(new ClassPathResource("sql/update-schema.sql"));
+        rdp.execute(dataSource);
 
-        // 3. check initialized property
+        // 4. check initialized property
         if ("true".equals(props.getProperty("app.jdbc.configure")) && "false".equals(props.getProperty("app.initialized"))) {
 
-            // 4. check if default admin user exists
+            // 5. check if default admin user exists
             Account account = getUserAccount(props.getProperty("app.admin.username"));
 
             if (account == null) {
-                // 5. register default admin user
+                // 6. register default admin user
                 Profile user = new Profile();
                 user.setEmailAddress(props.getProperty("app.admin.email"));
                 user.setFirstName(props.getProperty("app.admin.firstname"));
@@ -83,7 +93,7 @@ public class StartupServiceImpl implements StartupService{
                 AppResult<Account> created = userDao.register(account);
 
                 if (created.getEntity() != null) {
-                    // 6. update user info
+                    // 7. update user info
                     account.setRole(AccRole.admin);
                     account.setStatus(AccStatus.active);
                     AppResult<Account> updated = userDao.update(account);
@@ -94,7 +104,7 @@ public class StartupServiceImpl implements StartupService{
                     LOG.info("new '{}' account registered", account.getUsername());
                 }
                 
-                //7. Add default data from json
+                //8. Add default data from json
                 ObjectMapper mapper = new ObjectMapper();
                 try(InputStream src = getClass().getClassLoader().getResourceAsStream("json/rest.json")) {
                     List<UserEndpoints> endpoints = mapper.readValue(src, new TypeReference<List<UserEndpoints>>() {
@@ -108,7 +118,7 @@ public class StartupServiceImpl implements StartupService{
                 }
             }
             
-            //all clear - update initialized flag
+            // 9. all clear - update initialized flag
             onInitialized();
         }
     }
