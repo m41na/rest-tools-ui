@@ -5,6 +5,7 @@ import com.jarredweb.rest.tools.ui.persist.entity.Account;
 import com.jarredweb.rest.tools.ui.persist.entity.Profile;
 import com.jarredweb.rest.tools.ui.persist.entity.AccRole;
 import com.jarredweb.rest.tools.ui.persist.entity.AccStatus;
+import com.jarredweb.rest.tools.ui.util.PasswordUtil;
 import com.jarredweb.webjar.common.bean.AppResult;
 import java.util.Date;
 import java.util.HashMap;
@@ -75,7 +76,7 @@ public class UserAccountDaoJdbc implements UserAccountDao {
     public AppResult<Account> register(Account acc) {
         Map<String, Object> params = new HashMap<>();
         params.put("username", acc.getUsername());
-        params.put("password", acc.getPassword());
+        params.put("password", PasswordUtil.hashPassword(acc.getPassword()));
         params.put("user", acc.getProfile().getId());
 
         String sql = "insert into tbl_account (username, password, fk_profile_id, account_created_ts) values (:username, :password, :user, current_timestamp)";

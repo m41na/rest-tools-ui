@@ -1,7 +1,7 @@
 package com.jarredweb.rest.tools.ui.app;
 
 import com.jarredweb.rest.tools.ui.config.RestToolsConfig;
-import com.jarredweb.rest.tools.ui.resource.RestToolsResource;
+import com.jarredweb.rest.tools.ui.provider.AppUserBinder;
 import com.jarredweb.rest.tools.ui.service.StartupService;
 import com.jarredweb.webjar.http.app.AppRunnerBuilder;
 import com.jarredweb.webjar.http.app.WebjarBootup;
@@ -9,9 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
-public class ToolsRunner extends AppRunnerBuilder {
+public class RestToolsRunner extends AppRunnerBuilder {
     
-    private static final Logger LOG = LoggerFactory.getLogger(ToolsRunner.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RestToolsRunner.class);
     
     @Override
     public WebjarBootup initStartupService(ApplicationContext ctx) {
@@ -22,8 +22,11 @@ public class ToolsRunner extends AppRunnerBuilder {
 
     public static void main(String[] args) {
         String configClass = RestToolsConfig.class.getName();
-        LOG.info("loading configuration for {} from {}", ToolsRunner.class.getName(), configClass);
+        LOG.info("loading configuration for {} from {}", RestToolsRunner.class.getName(), configClass);
         System.setProperty("context.lookup", configClass);
-        new ToolsRunner().create(args, RestToolsResource.class);
+        new RestToolsRunner()
+                .packages("com.jarredweb.rest.tools.ui.resource")
+                .component(new AppUserBinder())
+                .create(args);
     }
 }

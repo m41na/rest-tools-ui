@@ -28,6 +28,12 @@
             <version>0.4.1-beta</version>
         </dependency>
         
+        <dependency>
+            <groupId>com.jarredweb.repo</groupId>
+            <artifactId>webjar-tasklet</artifactId>
+            <version>0.4.1-beta</version>
+        </dependency>
+        
         <!-- rest tools -->
         <dependency>
             <groupId>works.hop</groupId>
@@ -93,6 +99,20 @@
                 </exclusion>
             </exclusions>
             <scope>test</scope>
+        </dependency>
+        
+        <!-- encryption -->
+        <dependency>
+            <groupId>org.jasypt</groupId>
+            <artifactId>jasypt</artifactId>
+            <version>1.9.2</version>
+        </dependency>
+        
+        <!-- commons-text -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.2</version>
         </dependency>
         
         <!-- unit testing -->

@@ -1,12 +1,15 @@
 package com.jarredweb.rest.tools.ui.resource;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.jarredweb.rest.tools.ui.model.AppUser;
 import com.jarredweb.rest.tools.ui.model.ApplicationModel;
 import com.jarredweb.rest.tools.ui.model.EndpointsList;
 import com.jarredweb.rest.tools.ui.model.UserEndpoints;
 import com.jarredweb.rest.tools.ui.persist.UserEndpointsDao;
 import com.jarredweb.rest.tools.ui.service.EndpointsService;
 import com.jarredweb.webjar.common.bean.AppResult;
+import com.jarredweb.webjar.common.bean.ResStatus;
+import com.jarredweb.webjar.common.exception.AppException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
@@ -29,8 +32,10 @@ import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.glassfish.jersey.server.mvc.Viewable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import works.hop.rest.tools.api.ApiReq;
 import works.hop.rest.tools.client.ApiResListener;
 import works.hop.rest.tools.client.AssertionResListener;
@@ -53,18 +58,27 @@ public class RestToolsResource {
     private UserEndpointsDao endpDao;
 
     @GET
-    @PermitAll
-    public Response homeView() {
-        URI redirect = URI.create("/ws/rest");
+    public Response homeView(@Context AppUser user) {
+        URI redirect = URI.create("/ws/rest/" + user.getUserId());
         LOG.info("redirecting to {}", redirect.toString());
         return Response.seeOther(redirect).build();
     }
+    
+    @Path("/rest")
+    @GET
+    public Response restView(@Context AppUser user) {
+        if(user != null){
+            return homeView(user);
+        }
+        else{
+            throw new AppException(new ResStatus(1, "A user value is expected but was null"));
+        }
+    }
 
-    @Path("user/{uid}/rest")
+    @Path("rest/{uid}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @PermitAll
-    public Response restView(@PathParam("uid") Long userId) {
+    public Response restJson(@PathParam("uid") Long userId) {
         Map<String, Object> model = appModel.startViewModel();
         model.put("nav", appModel.buildNavModel(uriInfo));
         model.put("rest", service.getViewModel(userId));
@@ -72,10 +86,9 @@ public class RestToolsResource {
     }
 
     @POST
-    @Path("/user/{uid}/execute/:id")
+    @Path("/rest/{uid}/execute/:id")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    @PermitAll
     public Response invokeEndpoint(@PathParam("uid") Long userId, @PathParam("id") String id) {
         ApiResListener assertListener = new AssertionResListener();
         String file = "json/rest.json";
@@ -87,10 +100,9 @@ public class RestToolsResource {
     }
 
     @POST
-    @Path("/user/{uid}/execute")
+    @Path("/rest/{uid}/execute")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @PermitAll
     public Response invokeEndpoint(@PathParam("uid") Long userId, ApiReq endpoint) {
         ApiResListener assertListener = new AssertionResListener();
         RestConnector rest = new RestConnector(null, assertListener);
@@ -104,10 +116,9 @@ public class RestToolsResource {
     }
 
     @POST
-    @Path("/user/{uid}/upload")
+    @Path("/rest/{uid}/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    @PermitAll
     public Response uploadEndpoints(@PathParam("uid") Long userId,
             @FormDataParam("file") InputStream uploadStream,
             @FormDataParam("file") FormDataContentDisposition fileMetaData) {
@@ -127,9 +138,8 @@ public class RestToolsResource {
     }
 
     @GET
-    @Path("/user/{uid}/download")
+    @Path("/rest/{uid}/download")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    @PermitAll
     public Response downloadEndpoints(@PathParam("uid") Long userId) {
         UserEndpoints uep = endpDao.retrieveUserEndpoints(userId).getEntity();
         
