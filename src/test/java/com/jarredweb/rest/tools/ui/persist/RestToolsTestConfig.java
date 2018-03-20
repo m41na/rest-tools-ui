@@ -1,6 +1,7 @@
 package com.jarredweb.rest.tools.ui.persist;
 
 import com.jarredweb.rest.tools.ui.persist.impl.UserAccountDaoJdbc;
+import com.jarredweb.rest.tools.ui.persist.impl.UserAssertionsDaoJdbc;
 import com.jarredweb.rest.tools.ui.persist.impl.UserEndpointsDaoJdbc;
 import java.io.File;
 import javax.sql.DataSource;
@@ -52,5 +53,11 @@ public class RestToolsTestConfig {
     @Autowired
     public UserEndpointsDao userEndpointsDao(DataSource ds) {
         return new UserEndpointsDaoJdbc(ds);
+    }
+
+    @Bean
+    @Autowired
+    public UserAssertionsDao userAssertionsDao(DataSource ds) {
+        return new UserAssertionsDaoJdbc(ds);
     }
 }

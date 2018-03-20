@@ -3150,3 +3150,12 @@ delete from tbl_endpoint_item where fk_parent_list = ? AND endp_id = endpoint [4
 	at org.apache.maven.surefire.booter.SurefireStarter.invokeProvider(SurefireStarter.java:175)
 	at org.apache.maven.surefire.booter.SurefireStarter.runSuitesInProcessWhenForked(SurefireStarter.java:107)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:68)
+2018-03-19 17:12:54 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "ASSERT_TYPE VARCHAR(32) NOT NULL": "'aced00057e72002d776f726b732e686f702e726573742e746f6f6c732e6170692e4170694173736572742441737365727454797065000000000000000012000... (220)"; SQL statement:
+insert into tbl_endpoint_assert (fk_parent_endp, assert_type, fail_message, expected_value, actual_value, assert_execute, assert_created_ts) values (?, ?, ?, ?, ?, ?, current_timestamp) [22001-195]
+2018-03-19 17:15:20 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "ASSERT_TYPE VARCHAR(32) NOT NULL": "'aced00057e72002d776f726b732e686f702e726573742e746f6f6c732e6170692e4170694173736572742441737365727454797065000000000000000012000... (220)"; SQL statement:
+insert into tbl_endpoint_assert (fk_parent_endp, assert_type, fail_message, expected_value, actual_value, assert_execute, assert_created_ts) values (?, ?, ?, ?, ?, ?, current_timestamp) [22001-195]
+2018-03-19 17:26:50 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "ASSERT_TYPE VARCHAR(32) NOT NULL": "'aced00057e72002d776f726b732e686f702e726573742e746f6f6c732e6170692e4170694173736572742441737365727454797065000000000000000012000... (220)"; SQL statement:
+update tbl_endpoint_assert set assert_type=?, fail_message=?, expected_value=?, actual_value=?, assert_execute=? where assert_id=? [22001-195]

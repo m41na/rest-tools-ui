@@ -76,7 +76,8 @@ public class UserEndpointsDaoJdbc implements UserEndpointsDao {
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
 
-        String sql = "SELECT * FROM tbl_endpoint_item e inner join tbl_endpoints_list c on e.fk_parent_list=c.list_id WHERE c.list_id=:id";
+        String sql = "SELECT * FROM tbl_endpoint_item e "
+                + "inner join tbl_endpoints_list c on e.fk_parent_list=c.list_id WHERE c.list_id=:id";
 
         EndpointsList collection = template.query(sql, params, endpointsListExtractor());
         return collection != null ? new AppResult<>(collection) : new AppResult<>("could not find collection");
@@ -89,7 +90,8 @@ public class UserEndpointsDaoJdbc implements UserEndpointsDao {
 
         String sql = "SELECT * FROM tbl_endpoint_item e "
                 + "inner join tbl_endpoints_list c on e.fk_parent_list=c.list_id "
-                + "inner join tbl_profile p on p.profile_id=c.fk_list_owner WHERE p.profile_id=:id order by c.list_id, e.endp_id";
+                + "inner join tbl_profile p on p.profile_id=c.fk_list_owner "
+                + "WHERE p.profile_id=:id order by c.list_id, e.endp_id";
 
         UserEndpoints userEndp = template.query(sql, params, userEndpointsExtractor());
         AppResult<ApiReq> baseTemplate = retrieveApiRequest(1l, "1");

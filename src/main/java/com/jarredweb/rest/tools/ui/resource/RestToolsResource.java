@@ -19,8 +19,10 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -150,5 +152,70 @@ public class RestToolsResource {
         return Response.ok(outputStream, MediaType.APPLICATION_OCTET_STREAM)
                 .header("content-disposition", "attachment; filename = rest-file.json")
                 .build();
+    }
+    
+    @POST
+    @Path("/rest/{uid}/collection/{cid}/create")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createEndpoint(@PathParam("uid") Long userId, @PathParam("cid") Long collId, ApiReq endpoint) {
+        AppResult<ApiReq> created = endpDao.createApiRequest(collId, endpoint);
+        
+        //prepare and send response
+        if(created.getCode() == 0){  
+            return Response.ok(created.getEntity()).build();
+        }
+        else{
+            Map<String, Object> model = new HashMap<>();
+            model.put("error", created.getMessage());
+            model.put("reason", created.getReason());
+            model.put("userId", userId);
+            model.put("collectionId", collId);
+            model.put("entity", endpoint);
+            return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+        }
+    }
+    
+    @PUT
+    @Path("/rest/{uid}/collection/{cid}/update")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateEndpoint(@PathParam("uid") Long userId, @PathParam("cid") Long collId, ApiReq endpoint) {
+        AppResult<Integer> updated = endpDao.updateApiRequest(collId, endpoint);
+        
+        //prepare and send response
+        if(updated.getCode() == 0){  
+            return Response.ok(updated.getEntity()).build();
+        }
+        else{
+            Map<String, Object> model = new HashMap<>();
+            model.put("error", updated.getMessage());
+            model.put("reason", updated.getReason());
+            model.put("userId", userId);
+            model.put("collectionId", collId);
+            model.put("entity", endpoint);
+            return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+        }
+    }
+    
+    @DELETE
+    @Path("/rest/{uid}/collection/{cid}/drop/{eid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteEndpoint(@PathParam("uid") Long userId, @PathParam("cid") Long collId, @PathParam("eid") String endpoint) {
+        AppResult<Integer> removed = endpDao.removeApiRequest(collId, endpoint);
+        
+        //prepare and send response
+        if(removed.getCode() == 0){  
+            return Response.ok(removed.getEntity()).build();
+        }
+        else{
+            Map<String, Object> model = new HashMap<>();
+            model.put("error", removed.getMessage());
+            model.put("reason", removed.getReason());
+            model.put("userId", userId);
+            model.put("collectionId", collId);
+            model.put("endpointId", endpoint);
+            return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+        }
     }
 }

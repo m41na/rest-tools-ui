@@ -4,6 +4,7 @@ import com.jarredweb.rest.tools.ui.model.EndpointsList;
 import com.jarredweb.rest.tools.ui.model.EndpointsModel;
 import com.jarredweb.rest.tools.ui.model.PairValue;
 import java.util.List;
+import works.hop.rest.tools.api.ApiAssert;
 import works.hop.rest.tools.api.ApiReq;
 
 public interface EndpointsService {    
@@ -23,4 +24,14 @@ public interface EndpointsService {
     void updateEndpoint(Long userId, long collectionId, ApiReq endpoint);
 
     void dropEndpoint(Long userId, long collectionId, String endpointId);
+    
+    ApiAssert getEndpointAssertion(Long userId, Long collectionId, String endpointId, Long assertId);
+    
+    List<ApiAssert<?>> getEndpointAssertions(Long userId, Long collectionId, String endpointId);
+
+    void addNewAssertion(Long userId, Long collectionId, String endpointId, ApiAssert assertion);
+
+    void updateAssertion(Long userId, Long collectionId, String endpointId, ApiAssert assertion);
+
+    void dropAssertion(Long userId, Long collectionId, String endpointId, long assertId);
 }
