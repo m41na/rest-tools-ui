@@ -5,7 +5,6 @@ import com.jarredweb.rest.tools.ui.model.AppUser;
 import com.jarredweb.rest.tools.ui.model.ApplicationModel;
 import com.jarredweb.rest.tools.ui.model.EndpointsList;
 import com.jarredweb.rest.tools.ui.model.UserEndpoints;
-import com.jarredweb.rest.tools.ui.persist.UserEndpointsDao;
 import com.jarredweb.rest.tools.ui.service.EndpointsService;
 import com.jarredweb.webjar.common.bean.AppResult;
 import com.jarredweb.webjar.common.bean.ResStatus;
@@ -13,6 +12,7 @@ import com.jarredweb.webjar.common.exception.AppException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -35,6 +36,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import works.hop.rest.tools.api.ApiAssert;
 import works.hop.rest.tools.api.ApiReq;
 import works.hop.rest.tools.client.ApiResListener;
 import works.hop.rest.tools.client.AssertionResListener;
@@ -53,8 +55,6 @@ public class RestToolsResource {
     @Inject
     @Named("persist")
     private EndpointsService service;
-    @Inject
-    private UserEndpointsDao endpDao;
 
     @GET
     public Response homeView(@Context AppUser user) {
@@ -74,7 +74,7 @@ public class RestToolsResource {
         }
     }
 
-    @Path("rest/{uid}")
+    @Path("/rest/{uid}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response restJson(@PathParam("uid") Long userId) {
@@ -84,9 +84,8 @@ public class RestToolsResource {
         return Response.ok(model).build();
     }
 
-    @POST
-    @Path("/rest/{uid}/execute/:id")
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @GET
+    @Path("/rest/{uid}/execute/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response invokeEndpoint(@PathParam("uid") Long userId, @PathParam("id") String id) {
         ApiResListener assertListener = new AssertionResListener();
@@ -123,24 +122,42 @@ public class RestToolsResource {
             @FormDataParam("file") FormDataContentDisposition fileMetaData) {
         List<EndpointsList> collections = new InputStreamLoader(uploadStream).readValue(new TypeReference<List<EndpointsList>>() {
         });
+        
+        List<EndpointsList> savedCollections = new ArrayList<>();
 
         //update database
         collections.stream().forEach(collection -> {
-            AppResult<EndpointsList> result = endpDao.createCollection(collection, userId);
+            AppResult<EndpointsList> result = service.addNewCollection(userId, collection.getCollectionTitle());
             if (result.getCode() == 0) {
-                service.getUserCollections(userId).add(result.getEntity());
+                Long collId = result.getEntity().getCollectionId();
+                //for each collection, save the endpoints
+                List<ApiReq> endpoints = collection.getEndpoints();
+                endpoints.stream().forEach((endpoint) -> {
+                    AppResult<ApiReq> newEndp = service.addNewEndpoint(userId, collId, endpoint);
+                    if(newEndp.getCode() == 0){
+                        String endpointId = newEndp.getEntity().getId();
+                        //for each endpoint, save the assertions
+                        List<ApiAssert<?>> assertions = endpoint.getAssertions();
+                        assertions.stream().forEach((assertion) -> {
+                          AppResult<ApiAssert> newAssert = service.addNewAssertion(userId, collId, endpointId, assertion);
+                          if(newAssert.getCode() == 0){
+                              savedCollections.addAll(service.getUserCollections(userId));
+                          }
+                        });
+                    }
+                });
             }
         });
 
         //prepare and send response
-        return Response.ok(collections).build();
+        return Response.ok(savedCollections.size() > 0? savedCollections : collections).build();
     }
 
     @GET
     @Path("/rest/{uid}/download")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response downloadEndpoints(@PathParam("uid") Long userId) {
-        UserEndpoints uep = endpDao.retrieveUserEndpoints(userId).getEntity();
+        UserEndpoints uep = service.getViewModel(userId).getModel();
         
         //prepare response
         StreamingOutput outputStream = (OutputStream output) -> {
@@ -155,11 +172,11 @@ public class RestToolsResource {
     }
     
     @POST
-    @Path("/rest/{uid}/collection/{cid}/create")
+    @Path("/rest/{uid}/collection/{cid}/endpoint")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createEndpoint(@PathParam("uid") Long userId, @PathParam("cid") Long collId, ApiReq endpoint) {
-        AppResult<ApiReq> created = endpDao.createApiRequest(collId, endpoint);
+        AppResult<ApiReq> created = service.addNewEndpoint(userId, collId, endpoint);
         
         //prepare and send response
         if(created.getCode() == 0){  
@@ -177,11 +194,11 @@ public class RestToolsResource {
     }
     
     @PUT
-    @Path("/rest/{uid}/collection/{cid}/update")
+    @Path("/rest/{uid}/collection/{cid}/endpoint/{eid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateEndpoint(@PathParam("uid") Long userId, @PathParam("cid") Long collId, ApiReq endpoint) {
-        AppResult<Integer> updated = endpDao.updateApiRequest(collId, endpoint);
+        AppResult<Integer> updated = service.updateEndpoint(userId, collId, endpoint);
         
         //prepare and send response
         if(updated.getCode() == 0){  
@@ -199,10 +216,10 @@ public class RestToolsResource {
     }
     
     @DELETE
-    @Path("/rest/{uid}/collection/{cid}/drop/{eid}")
+    @Path("/rest/{uid}/collection/{cid}/endpoint/{eid}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteEndpoint(@PathParam("uid") Long userId, @PathParam("cid") Long collId, @PathParam("eid") String endpoint) {
-        AppResult<Integer> removed = endpDao.removeApiRequest(collId, endpoint);
+        AppResult<Integer> removed = service.dropEndpoint(userId, collId, endpoint);
         
         //prepare and send response
         if(removed.getCode() == 0){  
@@ -215,6 +232,67 @@ public class RestToolsResource {
             model.put("userId", userId);
             model.put("collectionId", collId);
             model.put("endpointId", endpoint);
+            return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+        }
+    }
+    
+    @POST
+    @Path("/rest/{uid}/collection")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createCollection(@PathParam("uid") Long userId, @FormParam("title") String title) {
+        AppResult<EndpointsList> created = service.addNewCollection(userId, title);
+        
+        //prepare and send response
+        if(created.getCode() == 0){  
+            return Response.ok(created.getEntity()).build();
+        }
+        else{
+            Map<String, Object> model = new HashMap<>();
+            model.put("error", created.getMessage());
+            model.put("reason", created.getReason());
+            model.put("userId", userId);
+            model.put("title", title);
+            return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+        }
+    }
+    
+    @PUT
+    @Path("/rest/{uid}/collection/{cid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateCollection(@PathParam("uid") Long userId, @PathParam("cid") Long collId, @FormParam("title") String title) {
+        AppResult<Integer> updated = service.updateCollection(userId, collId, title);
+        
+        //prepare and send response
+        if(updated.getCode() == 0){  
+            return Response.ok(updated.getEntity()).build();
+        }
+        else{
+            Map<String, Object> model = new HashMap<>();
+            model.put("error", updated.getMessage());
+            model.put("reason", updated.getReason());
+            model.put("userId", userId);
+            model.put("collectionId", collId);
+            model.put("title", title);
+            return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+        }
+    }
+    
+    @DELETE
+    @Path("/rest/{uid}/collection/{cid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteECollection(@PathParam("uid") Long userId, @PathParam("cid") Long collId) {
+        AppResult<Integer> removed = service.dropCollection(userId, collId);
+        
+        //prepare and send response
+        if(removed.getCode() == 0){  
+            return Response.ok(removed.getEntity()).build();
+        }
+        else{
+            Map<String, Object> model = new HashMap<>();
+            model.put("error", removed.getMessage());
+            model.put("reason", removed.getReason());
+            model.put("userId", userId);
+            model.put("collectionId", collId);
             return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
         }
     }

@@ -1,5 +1,6 @@
 package com.jarredweb.rest.tools.ui.config;
 
+import java.util.List;
 import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import works.hop.rest.tools.api.ApiReq;
+import works.hop.rest.tools.client.ClassPathJsonLoader;
+import works.hop.rest.tools.client.RestConnector;
 
 @Configuration
 @ComponentScan(basePackages = {"com.jarredweb.rest.tools.ui"})
@@ -34,5 +38,12 @@ public class RestToolsConfig {
     @Bean
     public PlatformTransactionManager txManager() {
         return new DataSourceTransactionManager(dataSource());
+    }
+    
+    @Bean
+    public ApiReq templateNode(){
+        RestConnector connect = new RestConnector(new ClassPathJsonLoader("json/template.json"));
+        List<ApiReq> list = connect.loadEndpoints();
+        return list.get(0);
     }
 }

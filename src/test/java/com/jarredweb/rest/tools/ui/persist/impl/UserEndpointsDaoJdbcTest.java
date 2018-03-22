@@ -69,7 +69,7 @@ public class UserEndpointsDaoJdbcTest {
         AppResult<UserEndpoints> endp = dao.retrieveUserEndpoints(1l);
         UserEndpoints result = endp.getEntity();
         assertTrue("User name contains 'Admin'", result.getUserName().contains("Admin"));
-        assertEquals("Expecting 1", 1, result.getMergedCollections().size());
+        assertEquals("Expecting 2", 2, result.getMergedCollections().size());
     }
 
     @Test

@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import works.hop.rest.tools.api.ApiAssert;
 import works.hop.rest.tools.api.ApiReq;
+import works.hop.rest.tools.client.RestConnector;
 
 @Service("persist")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -29,7 +30,9 @@ public class EndpointsServiceImpl implements EndpointsService, PersistService {
     private UserEndpointsDao endpDao;
     @Autowired
     private UserAssertionsDao assertDao;
-
+    @Autowired
+    private ApiReq templateReq;
+    
     @Override
     public EndpointsCache getEndpointsCache() {
         return this.endpCache;
@@ -79,6 +82,39 @@ public class EndpointsServiceImpl implements EndpointsService, PersistService {
     }
 
     @Override
+    public AppResult<EndpointsList> addNewCollection(Long userId, String title) {
+        EndpointsList collection = new EndpointsList();
+        collection.setCollectionTitle(title);
+        AppResult<EndpointsList> created = endpDao.createCollection(collection, userId);
+        if(created.getCode() == 0){
+            endpCache.getUserViewModel(userId).getModel().getCollections().add(created.getEntity());
+        }
+        return created;
+    }
+
+    @Override
+    public AppResult<Integer> updateCollection(Long userId, Long collId, String title) {
+        AppResult<Integer> updated = endpDao.updateCollection(collId, title);
+        if(updated.getCode() == 0){
+            endpCache.getUserViewModel(userId).getModel().getCollections().forEach(c->{
+                if(c.getCollectionId() == collId){
+                    c.setCollectionTitle(title);
+                }
+            });
+        }
+        return updated;
+    }
+
+    @Override
+    public AppResult<Integer> dropCollection(Long userId, Long collId) {
+        AppResult<Integer> dropped = endpDao.deleteCollection(collId);
+        if(dropped.getCode() == 0){
+            endpCache.getUserViewModel(userId).getModel().getCollections().removeIf(c-> c.getCollectionId() == collId);
+        }
+        return dropped;
+    }
+
+    @Override
     public List<EndpointsList> getUserCollections(Long userId) {
         return getViewModel(userId).getModel().getMergedCollections();
     }
@@ -106,7 +142,11 @@ public class EndpointsServiceImpl implements EndpointsService, PersistService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public void addNewEndpoint(Long userId, long collectionId, ApiReq endpoint) {
+    public AppResult<ApiReq> addNewEndpoint(Long userId, long collectionId, ApiReq endpoint) {
+        String nextId = "_" + System.currentTimeMillis();
+        endpoint.setId(nextId);
+        endpoint.setName(endpoint.getMethod() + " " + endpoint.getPath());
+        endpoint = RestConnector.mergeEndpoint(templateReq, endpoint);
         AppResult<ApiReq> createResult = endpDao.createApiRequest(collectionId, endpoint);
         if (createResult.getCode() == 0) {
             List<EndpointsList> endpoints = getViewModel(userId).getModel().getMergedCollections();
@@ -115,11 +155,12 @@ public class EndpointsServiceImpl implements EndpointsService, PersistService {
                 return item.getCollectionId() == collectionId;
             }).findFirst().get().getEndpoints().add(createResult.getEntity());
         }
+        return createResult;
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public void updateEndpoint(Long userId, long collectionId, ApiReq endpoint) {
+    public AppResult<Integer> updateEndpoint(Long userId, long collectionId, ApiReq endpoint) {
         AppResult<Integer> updateResult = endpDao.updateApiRequest(collectionId, endpoint);
         if (updateResult.getCode() == 0) {
             List<EndpointsList> endpoints = getViewModel(userId).getModel().getMergedCollections();
@@ -132,11 +173,12 @@ public class EndpointsServiceImpl implements EndpointsService, PersistService {
             list.removeIf(rq->rq.getId().equals(endpoint.getId()));
             list.add(endpoint);
         }
+        return updateResult;
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public void dropEndpoint(Long userId, long collectionId, String endpointId) {
+    public AppResult<Integer> dropEndpoint(Long userId, long collectionId, String endpointId) {
         AppResult<Integer> dropResult = endpDao.removeApiRequest(collectionId, endpointId);
         if(dropResult.getCode() == 0){
             List<EndpointsList> endpoints = getViewModel(userId).getModel().getMergedCollections();
@@ -147,11 +189,12 @@ public class EndpointsServiceImpl implements EndpointsService, PersistService {
             
             list.removeIf(rq->rq.getId().equals(endpointId));
         }
+        return dropResult;
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public void addNewAssertion(Long userId, Long collectionId, String endpointId, ApiAssert assertion) {
+    public AppResult<ApiAssert> addNewAssertion(Long userId, Long collectionId, String endpointId, ApiAssert assertion) {
         AppResult<ApiAssert> createResult = assertDao.createApiAssert(endpointId, assertion);
         if(createResult.getCode() == 0){
             ApiAssert created = createResult.getEntity();
@@ -161,11 +204,12 @@ public class EndpointsServiceImpl implements EndpointsService, PersistService {
                 return item.getCollectionId() == collectionId;
             }).findFirst().get().getEndpoints().stream().filter(ep->ep.getId().equals(endpointId)).findFirst().get().getAssertions().add(created);
         }
+        return createResult;
     }
 
     @Override
     public ApiAssert getEndpointAssertion(Long userId, Long collectionId, String endpointId, Long assertId) {
-        return assertDao.retrieveApiAssert(assertId).getEntity();
+        return getEndpointAssertions(userId, collectionId, endpointId).stream().filter(e->e.getId().equals(assertId)).findFirst().get();
     }
 
     @Override
@@ -180,7 +224,7 @@ public class EndpointsServiceImpl implements EndpointsService, PersistService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public void updateAssertion(Long userId, Long collectionId, String endpointId, ApiAssert assertion) {
+    public AppResult<Integer> updateAssertion(Long userId, Long collectionId, String endpointId, ApiAssert assertion) {
         AppResult<Integer> updateResult = assertDao.updateApiAssert(assertion);
         if(updateResult.getCode() == 0){
             List<EndpointsList> assertions = getViewModel(userId).getModel().getMergedCollections();
@@ -192,11 +236,12 @@ public class EndpointsServiceImpl implements EndpointsService, PersistService {
             list.removeIf(as->as.getId().equals(assertion.getId()));
             list.add(assertion);
         }
+        return updateResult;
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public void dropAssertion(Long userId, Long collectionId, String endpointId, long assertId) {
+    public AppResult<Integer> dropAssertion(Long userId, Long collectionId, String endpointId, long assertId) {
         AppResult<Integer> dropResult = assertDao.removeApiAssert(assertId);
         if(dropResult.getCode() == 0){
             List<EndpointsList> assertions = getViewModel(userId).getModel().getMergedCollections();
@@ -207,5 +252,6 @@ public class EndpointsServiceImpl implements EndpointsService, PersistService {
             
             list.removeIf(as->as.getId() == assertId);
         }
+        return dropResult;
     }
 }

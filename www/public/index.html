@@ -38,20 +38,34 @@
             <div class="container-fluid ">
                 <div class="row mt-2">
                     <div class="col-12">
-                        <ul class="nav justify-content-end">
+                        <ul class="nav justify-content-end" v-show="!newlist">
                             <li class="nav-item">
-                                <a class="nav-link" href="#">New Collection</a>
+                                <a class="nav-link" href="#" @click.prevent="newlist=!newlist">New Collection</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">New Endpoint</a>
+                                <a class="nav-link" href="#" @click.prevent="dropCollection">Drop Collection</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Drop Endpoint</a>
+                                <a class="nav-link" href="#" @click.prevent="clearEndpoint">New Endpoint</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" @click.prevent="dropEndpoint">Drop Endpoint</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link active" href="#" @click.prevent="saveChanges">Save Changes</a>
                             </li>
                         </ul>
+                        <form v-show="newlist">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text text-danger" @click="newlist=!newlist">cancel</span>
+                                </div>
+                                <input type="text" class="form-control" aria-label="create new collection" v-model="listname" placeholder="collection name">
+                                <div class="input-group-append">
+                                  <span class="input-group-text text-primary" @click="createCollection">save</span>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
                 <div class="row mt-2">
@@ -66,7 +80,18 @@
                                 </div>
                             </div>
                             <div class="form-row mb-3" v-if="selected.collection">
-                                <div  class="col-12">Selected: {{ collectionTitle(selected.collection) }}</div>
+                                <div class="col-12" v-if="edittitle">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text"><i class="far fa-times-circle text-danger" @click="edittitle=!edittitle"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" v-model="newtitle" aria-label="collection title)">
+                                        <div class="input-group-append">
+                                          <span class="input-group-text"><i class="far fa-save text-primary" @click="updateCollection"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12" v-else><i class="far fa-edit text-danger" @click="edittitle=!edittitle"></i> {{ collectionTitle(selected.collection) }}</div>
                             </div>
                             <div class="form-row mb-3 list-group">
                                 <button type="button" class="list-group-item list-group-item-action" @click="selectEndpoint(index)" v-for="item, index in endpoints">{{item.method}} {{item.path}}</button>
@@ -111,7 +136,19 @@
                                     </select>
                                 </div>
                                 
-                                <div class="col mt-3">
+                                <div class="col-sm-12 mt-3" v-if="uploadAllowed(endpoint.consumes)">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">Upload</span>
+                                        </div>
+                                        <div class="custom-file">
+                                          <input type="file" class="custom-file-input" id="inputFile">
+                                          <label class="custom-file-label" for="inputFile">Choose file</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-sm-12 mt-3">
                                     <textarea class="form-control" v-model="endpoint.entity" placeholder="Request Body"></textarea>
                                 </div>
                             </div>
@@ -143,9 +180,12 @@
 
                         </form>                    
                     
-                        <div class="row mt-2" v-if="selected.endpoint">
+                        <div class="row mt-2" v-if="response">
                             <div class="col mb-2">
-                                <textarea class="form-control" placeholder="Response Body">{{endpoint.response.responseBody}}</textarea>
+                                <div class="card">
+                                    <div class="card-header">Response Body</div>
+                                    <div class="card-body"><pre>{{response}}</pre></div>
+                                </div>
                             </div>
                         </div>
                         
@@ -208,7 +248,12 @@
         var app = new Vue({
             el: "#app",
             data: {
-                user: '',
+                uid: '',
+                username: '',
+                newlist: false,
+                listname: '',
+                edittitle: false,
+                newtitle: '',
                 selected: {
                     collection: '',
                     endpoint: ''
@@ -217,6 +262,7 @@
                 endpoint: {},
                 headers: [],
                 authorized: '',
+                response: '',
                 methods: ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"],
                 dataTypes: ["text/html", "text/plain", "application/json", "application/xml"],
                 contentTypes: ["application/x-www-form-urlencoded", "multipart/form-data"],
@@ -233,11 +279,75 @@
                 }
             },
             methods: {
+                createCollection(){
+                    if(this.newlist){
+                        var onSuccess = function(data){
+                            console.log(data);
+                            this.collections.push(data);
+                            this.selected.collection = this.listname;
+                            this.newlist = false;
+                            this.listname = '';
+                        }.bind(this);
+                        var onFailure = function(xhr, status){
+                            console.log(xhr.responseText);
+                        }.bind(this);
+
+                        $.ajax({
+                            url: '/ws/rest/' + this.uid + '/collection',
+                            type: 'post',
+                            data: "title=" + this.listname,
+                            dataType: 'json',
+                            success: onSuccess,
+                            error: onFailure
+                        });
+                    }
+                },
+                updateCollection(){
+                    let onSuccess = function(data){
+                        console.log(data);
+                    }.bind(this);
+
+                    let onFailure = function(xhr, status){
+                        console.log(xhr.responseText);
+                    }.bind(this);
+
+                    $.ajax({
+                        url: '/ws/rest/' + this.uid + '/collection/' + this.selected.collection,
+                        type: 'put',
+                        data: 'title=' + this.newtitle,
+                        dataType: 'json',
+                        success: onSuccess,
+                        error: onFailure
+                    });
+                },
+                dropCollection(){
+                    let onSuccess = function(data){
+                        console.log(data);
+                    }.bind(this);
+
+                    let onFailure = function(xhr, status){
+                        console.log(xhr.responseText);
+                    }.bind(this);
+
+                    $.ajax({
+                        url: '/ws/rest/' + this.uid + '/collection/' + this.selected.collection,
+                        type: 'delete',
+                        dataType: 'json',
+                        success: onSuccess,
+                        error: onFailure
+                    });
+                },
                 selectEndpoint(index){
                     this.endpoint = this.endpoints[index];
                     this.selected.endpoint = this.endpoint.id;
                     let headersObj = this.endpoint.headers;
                     this.headers = Object.keys(headersObj).map(h=>{return {name:h, value:headersObj[h]};});
+                    this.response = '';
+                },
+                clearEndpoint(){
+                    this.endpoint = {};
+                    this.headers = [];
+                    this.authorized = '';
                 },
                 addHeader() {
                     this.headers.push({name: '', value: ''});
@@ -251,6 +361,9 @@
                 entityAllowed(method){
                     return method === 'POST' || method === 'PUT';
                 },
+                uploadAllowed(consumes){
+                    return consumes? consumes.includes("multipart/form-data") : false;
+                },
                 addAssertion(){
                     this.endpoint.assertions.push({
                         id:"",
@@ -263,31 +376,75 @@
                 dropAssertion(index){
                     this.endpoint.assertions.splice(index, 1);
                 },
-                saveChanges(){
-                    let payload = this.endpoint;
-                    payload.headers = this.headers.reduce((acc,val)=>{
-                        acc[val.name] = val.value;
-                        return acc;
-                    });
-                    payload.authorized = this.authorized.split(",");
-                    
-                    console.log(JSON.stringify(payload));
-                    
-                    var onSuccess = function(data){
+                dropEndpoint(){
+                    let onSuccess = function(data){
                         console.log(data);
                     }.bind(this);
-                    var onFailure = function(xhr, status){
+
+                    let onFailure = function(xhr, status){
                         console.log(xhr.responseText);
                     }.bind(this);
+
                     $.ajax({
-                        url: '/ws/execute',
-                        type: 'post',
-                        data: JSON.stringify(payload),
-                        contentType: 'application/json',
+                        url: '/ws/rest/' + this.uid + '/collection/' + this.selected.collection + '/endpoint/' + this.selected.endpoint,
+                        type: 'delete',
                         dataType: 'json',
                         success: onSuccess,
                         error: onFailure
                     });
+                },
+                saveChanges(){
+                    let payload = this.endpoint;
+                    if(this.headers.length > 0){
+                        payload.headers = this.headers.reduce((acc,val)=>{
+                            acc[val.name] = val.value;
+                            return acc;
+                        });
+                    }
+                    if(this.authorized.length > 0){
+                        payload.authorized = this.authorized.split(",");
+                    }
+
+                    console.log(JSON.stringify(payload));                    
+                    
+                    if(!this.endpoint.id){
+                        let onSuccess = function(data){
+                            console.log(data);
+                        }.bind(this);
+                        
+                        let onFailure = function(xhr, status){
+                            console.log(xhr.responseText);
+                        }.bind(this);
+
+                        $.ajax({
+                            url: '/ws/rest/' + this.uid + '/collection/' + this.selected.collection + '/endpoint',
+                            type: 'post',
+                            data: JSON.stringify(payload),
+                            contentType: 'application/json',
+                            dataType: 'json',
+                            success: onSuccess,
+                            error: onFailure
+                        });
+                    }
+                    else{                        
+                        let onSuccess = function(data){
+                            console.log(data);
+                        }.bind(this);
+                        
+                        let onFailure = function(xhr, status){
+                            console.log(xhr.responseText);
+                        }.bind(this);
+
+                        $.ajax({
+                            url: '/ws/rest/' + this.uid + '/collection/' + this.selected.collection + '/endpoint/' + this.selected.endpoint,
+                            type: 'put',
+                            data: JSON.stringify(payload),
+                            contentType: 'application/json',
+                            dataType: 'json',
+                            success: onSuccess,
+                            error: onFailure
+                        });
+                    }
                 },
                 collectionTitle(id){
                     if (this.collections.length > 0){
@@ -295,16 +452,36 @@
                     }
                 },
                 executeEndpoint(){
+                    let payload = this.endpoint;
+                    if(this.headers.length > 0){
+                        payload.headers = this.headers.reduce((acc,val)=>{
+                            acc[val.name] = val.value;
+                            return acc;
+                        });
+                    }
+                    if(this.authorized.length > 0){
+                        payload.authorized = this.authorized.split(",");
+                    }
+                    
                     var onSuccess = function(data){
-                        console.log(data);
+                        let type = data.response.headers["Content-Type"];
+                        if(type.includes("text/html")){
+                            let parser=new DOMParser();
+                            htmlDoc=parser.parseFromString(data.response.responseBody, "text/html");
+                            this.response = htmlDoc.innerHTML;
+                        }
+                        if(type.includes("application/json")){
+                            this.response = JSON.stringify(data, undefined, 4);
+                        }
                     }.bind(this);
                     var onFailure = function(xhr, status){
                         console.log(xhr.responseText);
                     }.bind(this);
+                    
                     $.ajax({
-                        url: '/ws/execute',
+                        url: '/ws/rest/' + this.uid + '/execute',
                         type: 'post',
-                        data: JSON.stringify([this.endpoint]),
+                        data: JSON.stringify(payload),
                         contentType: 'application/json',
                         dataType: 'json',
                         success: onSuccess,
@@ -317,10 +494,13 @@
                     this.collections = data.rest.model.collections.map(e => {
                         return {id: e.collectionId, title: e.collectionTitle, endpoints: e.endpoints};
                     });
+                    this.uid = data.rest.model.userId;
+                    this.username = data.rest.model.userName;
                 }.bind(this);
                 var onFailure = function(xhr, status){
                     console.log(xhr.responseText);
                 }.bind(this);
+                
                 $.ajax({
                     url: '/ws/rest',
                     type: 'get',

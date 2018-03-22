@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jarredweb.rest.tools.ui.model.*;
 import com.jarredweb.rest.tools.ui.service.EndpointsService;
+import com.jarredweb.webjar.common.bean.AppResult;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -39,6 +40,28 @@ public class EndpointsServiceMock implements EndpointsService {
     }
 
     @Override
+    public AppResult<EndpointsList> addNewCollection(Long userId, String title) {
+        EndpointsList list = new EndpointsList();
+        list.setCollectionTitle(title);
+        list.setCollectionId(idGen.nextLongId("collections", null));
+        viewModel.getModel().getCollections().add(list);
+        return new AppResult<>(list);
+    }
+
+    @Override
+    public AppResult<Integer> updateCollection(Long userId, Long collId, String title) {
+        EndpointsList list = viewModel.getModel().getCollections().stream().filter(li->li.getCollectionId() == collId).findFirst().get();
+        list.setCollectionTitle(title);
+        return new AppResult<>(0);
+    }
+
+    @Override
+    public AppResult<Integer> dropCollection(Long userId, Long collId) {
+        viewModel.getModel().getCollections().removeIf(li->li.getCollectionId() == collId);
+        return new AppResult<>(0);
+    }
+
+    @Override
     public List<EndpointsList> getUserCollections(Long userId) {
         return getViewModel(userId).getModel().getMergedCollections();
     }
@@ -65,17 +88,19 @@ public class EndpointsServiceMock implements EndpointsService {
     }
 
     @Override
-    public void addNewEndpoint(Long userId, long collectionId, ApiReq endpoint) {
+    public AppResult<ApiReq> addNewEndpoint(Long userId, long collectionId, ApiReq endpoint) {
         endpoint.setId(idGen.nextStringId());
         List<EndpointsList> endpoints = getViewModel(userId).getModel().getMergedCollections();
 
         endpoints.stream().filter(item -> {
             return item.getCollectionId() == collectionId;
         }).findFirst().get().getEndpoints().add(endpoint);
+        
+        return new AppResult<>(endpoint);
     }
 
     @Override
-    public void updateEndpoint(Long userId, long collectionId, ApiReq endpoint) {
+    public AppResult<Integer> updateEndpoint(Long userId, long collectionId, ApiReq endpoint) {
         List<EndpointsList> endpoints = getViewModel(userId).getModel().getMergedCollections();
 
         List<ApiReq> list = endpoints.stream().filter(item -> {
@@ -85,10 +110,12 @@ public class EndpointsServiceMock implements EndpointsService {
         //replace endpoint in collection
         list.removeIf(rq -> rq.getId().equals(endpoint.getId()));
         list.add(endpoint);
+        
+        return new AppResult<>(0);
     }
 
     @Override
-    public void dropEndpoint(Long userId, long collectionId, String endpointId) {
+    public AppResult<Integer> dropEndpoint(Long userId, long collectionId, String endpointId) {
         List<EndpointsList> endpoints = getViewModel(userId).getModel().getMergedCollections();
 
         List<ApiReq> list = endpoints.stream().filter(item -> {
@@ -96,6 +123,8 @@ public class EndpointsServiceMock implements EndpointsService {
         }).findFirst().get().getEndpoints();
 
         list.removeIf(rq -> rq.getId().equals(endpointId));
+        
+        return new AppResult<>(0);
     }
 
     @Override
@@ -113,7 +142,7 @@ public class EndpointsServiceMock implements EndpointsService {
     }
 
     @Override
-    public void addNewAssertion(Long userId, Long collectionId, String endpointId, ApiAssert assertion) {
+    public AppResult<ApiAssert> addNewAssertion(Long userId, Long collectionId, String endpointId, ApiAssert assertion) {
         assertion.setId(idGen.nextLongId());
         List<EndpointsList> endpoints = getViewModel(userId).getModel().getMergedCollections();
 
@@ -121,10 +150,11 @@ public class EndpointsServiceMock implements EndpointsService {
             return item.getCollectionId() == collectionId;
         }).findFirst().get().getEndpoints().stream().filter(ep -> ep.getId().equals(endpointId)).findFirst().get().getAssertions().add(assertion);
 
+        return new AppResult<>(assertion);
     }
 
     @Override
-    public void updateAssertion(Long userId, Long collectionId, String endpointId, ApiAssert assertion) {
+    public AppResult<Integer> updateAssertion(Long userId, Long collectionId, String endpointId, ApiAssert assertion) {
         List<EndpointsList> assertions = getViewModel(userId).getModel().getMergedCollections();
 
         List<ApiAssert<?>> list = assertions.stream().filter(item -> {
@@ -133,10 +163,12 @@ public class EndpointsServiceMock implements EndpointsService {
 
         list.removeIf(as -> as.getId().equals(assertion.getId()));
         list.add(assertion);
+        
+        return new AppResult<>(0);
     }
 
     @Override
-    public void dropAssertion(Long userId, Long collectionId, String endpointId, long assertId) {
+    public AppResult<Integer> dropAssertion(Long userId, Long collectionId, String endpointId, long assertId) {
         List<EndpointsList> assertions = getViewModel(userId).getModel().getMergedCollections();
 
         List<ApiAssert<?>> list = assertions.stream().filter(item -> {
@@ -144,6 +176,8 @@ public class EndpointsServiceMock implements EndpointsService {
         }).findFirst().get().getEndpoints().stream().filter(ep -> ep.getId().equals(endpointId)).findFirst().get().getAssertions();
 
         list.removeIf(as -> as.getId() == assertId);
+        
+        return new AppResult<>(0);
     }
 
     private EndpointsModel restViewModel() {

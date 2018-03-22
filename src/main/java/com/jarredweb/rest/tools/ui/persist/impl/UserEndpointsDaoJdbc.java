@@ -88,10 +88,10 @@ public class UserEndpointsDaoJdbc implements UserEndpointsDao {
         Map<String, Object> params = new HashMap<>();
         params.put("id", userId);
 
-        String sql = "SELECT * FROM tbl_endpoint_item e "
-                + "inner join tbl_endpoints_list c on e.fk_parent_list=c.list_id "
-                + "inner join tbl_profile p on p.profile_id=c.fk_list_owner "
-                + "WHERE p.profile_id=:id order by c.list_id, e.endp_id";
+        String sql = "SELECT * FROM tbl_endpoints_list c \n" +
+                    "left outer join tbl_endpoint_item e on e.fk_parent_list=c.list_id\n" +
+                    "inner join tbl_profile p on p.profile_id=c.fk_list_owner\n" +
+                    "where c.fk_list_owner=:id order by c.list_id, e.endp_id;";
 
         UserEndpoints userEndp = template.query(sql, params, userEndpointsExtractor());
         AppResult<ApiReq> baseTemplate = retrieveApiRequest(1l, "1");
@@ -186,8 +186,10 @@ public class UserEndpointsDaoJdbc implements UserEndpointsDao {
             UserEndpoints endp = new UserEndpoints();
             Long userId = null;
             Long listId = null;
+            String endpId = null;
             EndpointsList list;
             List<ApiReq> items = null;
+            int row = 1;
             while (rs.next()) {
                 if (userId == null) {
                     userId = rs.getLong("profile_id");
@@ -200,13 +202,15 @@ public class UserEndpointsDaoJdbc implements UserEndpointsDao {
                     list = new EndpointsList();
                     items = new ArrayList<>();
                     list.setCollectionId(listId);
-                    list.setCollectionTitle("list_title");
+                    list.setCollectionTitle(rs.getString("list_title"));
                     list.setEndpoints(items);
                     endp.getCollections().add(list);
                 }
-                int row = 1;
-                ApiReq item = endpointItemMapper().mapRow(rs, row++);
-                items.add(item);
+                endpId = rs.getString("endp_id");
+                if(endpId != null){
+                    ApiReq item = endpointItemMapper().mapRow(rs, row++);
+                    items.add(item);
+                }
             }
             return endp;
         };

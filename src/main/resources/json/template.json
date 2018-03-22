@@ -1,0 +1,21 @@
+[{
+    "id": 0,
+    "name": "template",
+    "descr": "testing grid endpoints",
+    "method": "GET",
+    "path": "/",
+    "consumes": "",
+    "produces": "application/json",
+    "headers": {},
+    "entity": "",
+    "authorized": [],
+    "response": {},
+    "assertions": [],
+    "url": "http://localhost:8082/ws",
+    "envs": {
+        "local": "http://localhost:8082/ws/rest",
+        "dev": "http://some-dev-host:8082/ws/rest",
+        "test": "http://some-test-host:8082/ws/rest"
+    },
+    "execute": false
+}]
