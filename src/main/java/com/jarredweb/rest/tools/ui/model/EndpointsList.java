@@ -1,5 +1,6 @@
 package com.jarredweb.rest.tools.ui.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import works.hop.rest.tools.api.ApiReq;
 
@@ -7,7 +8,7 @@ public class EndpointsList {
 
     private long collectionId;
     private String collectionTitle;
-    private List<ApiReq> endpoints;
+    private List<ApiReq> endpoints = new ArrayList<>();
 
     public long getCollectionId() {
         return collectionId;

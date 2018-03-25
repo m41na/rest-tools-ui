@@ -83,6 +83,16 @@ public class RestToolsResource {
         model.put("rest", service.getViewModel(userId));
         return Response.ok(model).build();
     }
+    
+    @Path("/rest/{uid}/reset")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response resetJson(@PathParam("uid") Long userId) {
+        Map<String, Object> model = appModel.startViewModel();
+        model.put("nav", appModel.buildNavModel(uriInfo));
+        model.put("rest", service.getViewModel(userId));
+        return Response.ok(model).build();
+    }
 
     @GET
     @Path("/rest/{uid}/execute/{id}")
@@ -120,13 +130,14 @@ public class RestToolsResource {
     public Response uploadEndpoints(@PathParam("uid") Long userId,
             @FormDataParam("file") InputStream uploadStream,
             @FormDataParam("file") FormDataContentDisposition fileMetaData) {
-        List<EndpointsList> collections = new InputStreamLoader(uploadStream).readValue(new TypeReference<List<EndpointsList>>() {
-        });
+        List<UserEndpoints> uendp = new InputStreamLoader(uploadStream).readValue(new TypeReference<List<UserEndpoints>>(){});
         
+        List<EndpointsList> uploadedCollections = new ArrayList<>();
         List<EndpointsList> savedCollections = new ArrayList<>();
 
         //update database
-        collections.stream().forEach(collection -> {
+        uendp.stream().forEach((coll)->coll.getCollections().stream().forEach(collection -> {
+            uploadedCollections.add(collection);
             AppResult<EndpointsList> result = service.addNewCollection(userId, collection.getCollectionTitle());
             if (result.getCode() == 0) {
                 Long collId = result.getEntity().getCollectionId();
@@ -147,10 +158,10 @@ public class RestToolsResource {
                     }
                 });
             }
-        });
+        }));
 
         //prepare and send response
-        return Response.ok(savedCollections.size() > 0? savedCollections : collections).build();
+        return Response.ok(savedCollections.size() > 0? savedCollections : uploadedCollections).build();
     }
 
     @GET
@@ -169,6 +180,67 @@ public class RestToolsResource {
         return Response.ok(outputStream, MediaType.APPLICATION_OCTET_STREAM)
                 .header("content-disposition", "attachment; filename = rest-file.json")
                 .build();
+    }
+    
+    @POST
+    @Path("/rest/{uid}/collection")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createCollection(@PathParam("uid") Long userId, @FormParam("title") String title) {
+        AppResult<EndpointsList> created = service.addNewCollection(userId, title);
+        
+        //prepare and send response
+        if(created.getCode() == 0){  
+            return Response.ok(created.getEntity()).build();
+        }
+        else{
+            Map<String, Object> model = new HashMap<>();
+            model.put("error", created.getMessage());
+            model.put("reason", created.getReason());
+            model.put("userId", userId);
+            model.put("title", title);
+            return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+        }
+    }
+    
+    @PUT
+    @Path("/rest/{uid}/collection/{cid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateCollection(@PathParam("uid") Long userId, @PathParam("cid") Long collId, @FormParam("title") String title) {
+        AppResult<Integer> updated = service.updateCollection(userId, collId, title);
+        
+        //prepare and send response
+        if(updated.getCode() == 0){  
+            return Response.ok(updated.getEntity()).build();
+        }
+        else{
+            Map<String, Object> model = new HashMap<>();
+            model.put("error", updated.getMessage());
+            model.put("reason", updated.getReason());
+            model.put("userId", userId);
+            model.put("collectionId", collId);
+            model.put("title", title);
+            return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+        }
+    }
+    
+    @DELETE
+    @Path("/rest/{uid}/collection/{cid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteCollection(@PathParam("uid") Long userId, @PathParam("cid") Long collId) {
+        AppResult<Integer> removed = service.dropCollection(userId, collId);
+        
+        //prepare and send response
+        if(removed.getCode() == 0){  
+            return Response.ok(removed.getEntity()).build();
+        }
+        else{
+            Map<String, Object> model = new HashMap<>();
+            model.put("error", removed.getMessage());
+            model.put("reason", removed.getReason());
+            model.put("userId", userId);
+            model.put("collectionId", collId);
+            return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
+        }
     }
     
     @POST
@@ -237,10 +309,11 @@ public class RestToolsResource {
     }
     
     @POST
-    @Path("/rest/{uid}/collection")
+    @Path("/rest/{uid}/collection/{cid}/endpoint/{eid}/assertion")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createCollection(@PathParam("uid") Long userId, @FormParam("title") String title) {
-        AppResult<EndpointsList> created = service.addNewCollection(userId, title);
+    public Response createAssertion(@PathParam("uid") Long userId, @PathParam("cid") Long collId, @PathParam("eid") String endpId, ApiAssert<String> assertion) {
+        AppResult<ApiAssert> created = service.addNewAssertion(userId, collId, endpId, assertion);
         
         //prepare and send response
         if(created.getCode() == 0){  
@@ -251,16 +324,18 @@ public class RestToolsResource {
             model.put("error", created.getMessage());
             model.put("reason", created.getReason());
             model.put("userId", userId);
-            model.put("title", title);
+            model.put("collectionId", collId);
+            model.put("entity", assertion);
             return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
         }
     }
     
     @PUT
-    @Path("/rest/{uid}/collection/{cid}")
+    @Path("/rest/{uid}/collection/{cid}/endpoint/{eid}/assertion/{aid}")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateCollection(@PathParam("uid") Long userId, @PathParam("cid") Long collId, @FormParam("title") String title) {
-        AppResult<Integer> updated = service.updateCollection(userId, collId, title);
+    public Response updateAssertion(@PathParam("uid") Long userId, @PathParam("cid") Long collId, @PathParam("eid") String endpId, ApiAssert<String> assertion) {
+        AppResult<Integer> updated = service.updateAssertion(userId, collId, endpId, assertion);
         
         //prepare and send response
         if(updated.getCode() == 0){  
@@ -272,16 +347,16 @@ public class RestToolsResource {
             model.put("reason", updated.getReason());
             model.put("userId", userId);
             model.put("collectionId", collId);
-            model.put("title", title);
+            model.put("entity", assertion);
             return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
         }
     }
     
     @DELETE
-    @Path("/rest/{uid}/collection/{cid}")
+    @Path("/rest/{uid}/collection/{cid}/endpoint/{eid}/assertion/{aid}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteECollection(@PathParam("uid") Long userId, @PathParam("cid") Long collId) {
-        AppResult<Integer> removed = service.dropCollection(userId, collId);
+    public Response deleteAssertiont(@PathParam("uid") Long userId, @PathParam("cid") Long collId, @PathParam("eid") String endpoint, @PathParam("aid") Long assertId) {
+        AppResult<Integer> removed = service.dropAssertion(userId, collId, endpoint, assertId);
         
         //prepare and send response
         if(removed.getCode() == 0){  
@@ -293,6 +368,8 @@ public class RestToolsResource {
             model.put("reason", removed.getReason());
             model.put("userId", userId);
             model.put("collectionId", collId);
+            model.put("endpointId", endpoint);
+            model.put("assertionId", assertId);
             return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
         }
     }

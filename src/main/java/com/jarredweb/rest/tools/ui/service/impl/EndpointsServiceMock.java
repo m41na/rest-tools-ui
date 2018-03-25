@@ -38,6 +38,11 @@ public class EndpointsServiceMock implements EndpointsService {
     public EndpointsModel getViewModel(Long userId) {
         return viewModel;
     }
+    
+    @Override
+    public EndpointsModel getViewModel(Long userId, Boolean reset) {
+        return getViewModel(userId);
+    }
 
     @Override
     public AppResult<EndpointsList> addNewCollection(Long userId, String title) {

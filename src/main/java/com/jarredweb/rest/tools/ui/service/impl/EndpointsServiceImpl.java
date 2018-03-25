@@ -80,8 +80,17 @@ public class EndpointsServiceImpl implements EndpointsService, PersistService {
         }
         return model;
     }
+    
+    @Override
+    public EndpointsModel getViewModel(Long userId, Boolean reset) {
+        if(reset){
+            endpCache.resetUserViewModel(userId);
+        }
+        return getViewModel(userId);
+    }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public AppResult<EndpointsList> addNewCollection(Long userId, String title) {
         EndpointsList collection = new EndpointsList();
         collection.setCollectionTitle(title);
@@ -93,6 +102,7 @@ public class EndpointsServiceImpl implements EndpointsService, PersistService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public AppResult<Integer> updateCollection(Long userId, Long collId, String title) {
         AppResult<Integer> updated = endpDao.updateCollection(collId, title);
         if(updated.getCode() == 0){
@@ -106,6 +116,7 @@ public class EndpointsServiceImpl implements EndpointsService, PersistService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public AppResult<Integer> dropCollection(Long userId, Long collId) {
         AppResult<Integer> dropped = endpDao.deleteCollection(collId);
         if(dropped.getCode() == 0){
@@ -143,6 +154,7 @@ public class EndpointsServiceImpl implements EndpointsService, PersistService {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public AppResult<ApiReq> addNewEndpoint(Long userId, long collectionId, ApiReq endpoint) {
+        endpoint = RestConnector.mergeEndpoint(templateReq, endpoint);
         String nextId = "_" + System.currentTimeMillis();
         endpoint.setId(nextId);
         endpoint.setName(endpoint.getMethod() + " " + endpoint.getPath());
@@ -161,7 +173,8 @@ public class EndpointsServiceImpl implements EndpointsService, PersistService {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public AppResult<Integer> updateEndpoint(Long userId, long collectionId, ApiReq endpoint) {
-        AppResult<Integer> updateResult = endpDao.updateApiRequest(collectionId, endpoint);
+        ApiReq mergedEndpoint = RestConnector.mergeEndpoint(templateReq, endpoint);
+        AppResult<Integer> updateResult = endpDao.updateApiRequest(collectionId, mergedEndpoint);
         if (updateResult.getCode() == 0) {
             List<EndpointsList> endpoints = getViewModel(userId).getModel().getMergedCollections();
 
@@ -170,8 +183,8 @@ public class EndpointsServiceImpl implements EndpointsService, PersistService {
             }).findFirst().get().getEndpoints();
             
             //replace endpoint in collection
-            list.removeIf(rq->rq.getId().equals(endpoint.getId()));
-            list.add(endpoint);
+            list.removeIf(rq->rq.getId().equals(mergedEndpoint.getId()));
+            list.add(mergedEndpoint);
         }
         return updateResult;
     }

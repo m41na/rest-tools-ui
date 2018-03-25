@@ -17,4 +17,8 @@ public class EndpointsCache {
     public void cacheUserViewModel(Long id, EndpointsModel model){
         CACHE.put(id, model);
     }
+    
+    public void resetUserViewModel(Long id){
+        CACHE.remove(id);
+    }
 }

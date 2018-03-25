@@ -9,6 +9,7 @@ body {
 .sidebar {
     -ms-flex: 0 0 300px;
     flex: 0 0 300px;
+    min-height: 100%
 }
 .footer {
   position: absolute;

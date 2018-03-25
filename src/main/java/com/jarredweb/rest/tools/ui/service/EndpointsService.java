@@ -12,6 +12,8 @@ public interface EndpointsService {
     
     EndpointsModel getViewModel(Long userId);
     
+    EndpointsModel getViewModel(Long userId, Boolean reset);
+    
     AppResult<EndpointsList> addNewCollection(Long userId, String title);
     
     AppResult<Integer> updateCollection(Long userId, Long collId, String title);
