@@ -261,6 +261,11 @@
                                         <button type="button" class="btn btn-primary btn-sm ml-2" @click="saveAssertion(index)"><i class="far fa-save"></i></button>
                                         <button type="button" class="btn btn-danger btn-sm ml-2" v-if="assertion.id" @click="dropAssertion(index)"><i class="far fa-trash-alt"></i></button>
                                     </div>
+                                    <div class="form-row mb-3" v-if="assertion.result">
+                                        <div class="col">
+                                            <input type="text" class="form-control" :class="[(assertion.result === 'pass')? 'bg-success':'bg-danger']" v-model="assertion.result" placeholder="Assertion Result">
+                                        </div>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -661,6 +666,7 @@
                     var onSuccess = function(data){
                         console.log(data);
                         this.response = data.response;
+                        this.endpoint.assertions = data.assertions;
                     }.bind(this);
                     var onFailure = function(xhr, status){
                         console.log(xhr.responseText);

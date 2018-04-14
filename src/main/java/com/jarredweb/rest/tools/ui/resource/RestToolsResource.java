@@ -90,7 +90,7 @@ public class RestToolsResource {
     public Response resetJson(@PathParam("uid") Long userId) {
         Map<String, Object> model = appModel.startViewModel();
         model.put("nav", appModel.buildNavModel(uriInfo));
-        model.put("rest", service.getViewModel(userId));
+        model.put("rest", service.getViewModel(userId, true));
         return Response.ok(model).build();
     }
 
@@ -104,7 +104,10 @@ public class RestToolsResource {
         rest.run();
 
         //prepare and send response
-        return Response.ok(assertListener.getAssertionResults()).build();
+        Map<String, Object> model = new HashMap<>();
+        model.put("response", assertListener.getApiResponse());
+        model.put("assertions", assertListener.getApiAssertions());
+        return Response.ok(model).build();
     }
 
     @POST
@@ -119,7 +122,7 @@ public class RestToolsResource {
         //prepare and send response
         Map<String, Object> model = new HashMap<>();
         model.put("response", assertListener.getApiResponse());
-        model.put("results", assertListener.getAssertionResults());
+        model.put("assertions", assertListener.getApiAssertions());
         return Response.ok(model).build();
     }
 
