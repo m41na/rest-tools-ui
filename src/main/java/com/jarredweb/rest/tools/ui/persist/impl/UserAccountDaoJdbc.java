@@ -39,7 +39,7 @@ public class UserAccountDaoJdbc implements UserAccountDao {
         params.put("size", size);
         String sql = "SELECT * FROM tbl_account a inner join tbl_profile p on a.fk_profile_id = p.fk_profile_id limit :size offset :start order by a.username";
         List<Account> list = template.query(sql, params, userMapper());
-        return list != null ? new AppResult<>(list) : new AppResult<>("could not find accounts");
+        return list != null ? new AppResult<>(list) : new AppResult<>(1, "could not find accounts");
     }
 
     @Override
@@ -51,7 +51,7 @@ public class UserAccountDaoJdbc implements UserAccountDao {
                 + "WHERE account_id=:id";
 
         Account account = template.queryForObject(sql, params, userMapper());
-        return account != null ? new AppResult<>(account) : new AppResult<>("could not find account");
+        return account != null ? new AppResult<>(account) : new AppResult<>(1, "could not find account");
     }
 
     @Override
@@ -69,7 +69,7 @@ public class UserAccountDaoJdbc implements UserAccountDao {
             result = list.get(0);
         }
 
-        return result != null ? new AppResult<>(result) : new AppResult<>("could not find account");
+        return result != null ? new AppResult<>(result) : new AppResult<>(1, "could not find account");
     }
 
     @Override
@@ -85,7 +85,7 @@ public class UserAccountDaoJdbc implements UserAccountDao {
         int res = template.update(sql, new MapSqlParameterSource(params), holder);
         acc.setId(holder.getKey().longValue());
 
-        return (res > 0) ? new AppResult<>(acc) : new AppResult<>("failed registration");
+        return (res > 0) ? new AppResult<>(acc) : new AppResult<>(1, "failed registration");
     }
 
     @Override
@@ -98,7 +98,7 @@ public class UserAccountDaoJdbc implements UserAccountDao {
         String sql = "update tbl_account set acc_role=:role, acc_status=:status where account_id=:id";
 
         int res = template.update(sql, params);
-        return (res > 0) ? new AppResult<>(account) : new AppResult<>("failed updating account");
+        return (res > 0) ? new AppResult<>(account) : new AppResult<>(1, "failed updating account");
     }
 
     @Override
@@ -110,7 +110,7 @@ public class UserAccountDaoJdbc implements UserAccountDao {
         String sql = "update tbl_account set password=:password where account_id=:id";
 
         int res = template.update(sql, params);
-        return (res > 0) ? new AppResult<>(account) : new AppResult<>("failed updating account");
+        return (res > 0) ? new AppResult<>(account) : new AppResult<>(1, "failed updating account");
     }
 
     @Override
@@ -121,7 +121,7 @@ public class UserAccountDaoJdbc implements UserAccountDao {
         String sql = "delete from tbl_account where account_id = :id";
 
         int res = template.update(sql, params);
-        return (res > 0) ? new AppResult<>(res) : new AppResult<>("failed to delete account");
+        return (res > 0) ? new AppResult<>(res) : new AppResult<>(1, "failed to delete account");
     }
 
     @Override
@@ -132,7 +132,7 @@ public class UserAccountDaoJdbc implements UserAccountDao {
         String sql = "SELECT * FROM tbl_profile WHERE profile_id=:id";
 
         Profile profile = template.queryForObject(sql, params, profileMapper());
-        return profile != null ? new AppResult<>(profile) : new AppResult<>("could not find profile");
+        return profile != null ? new AppResult<>(profile) : new AppResult<>(1, "could not find profile");
     }
 
     @Override
@@ -149,7 +149,7 @@ public class UserAccountDaoJdbc implements UserAccountDao {
             result = list.get(0);
         }
 
-        return result != null ? new AppResult<>(result) : new AppResult<>("could not find profile");
+        return result != null ? new AppResult<>(result) : new AppResult<>(1, "could not find profile");
     }
 
     @Override
@@ -166,7 +166,7 @@ public class UserAccountDaoJdbc implements UserAccountDao {
         int res = template.update(sql, new MapSqlParameterSource(params), holder);
         profile.setId(holder.getKey().longValue());
 
-        return (res > 0) ? new AppResult<>(profile) : new AppResult<>("failed new category");
+        return (res > 0) ? new AppResult<>(profile) : new AppResult<>(1, "failed new category");
     }
 
     @Override
@@ -180,7 +180,7 @@ public class UserAccountDaoJdbc implements UserAccountDao {
         String sql = "update tbl_profile set first_name=:firstName, last_name=:lastName, phone_num=:phoneNum where profile_id=:id";
 
         int res = template.update(sql, params);
-        return (res > 0) ? new AppResult<>(profile) : new AppResult<>("failed to update profile");
+        return (res > 0) ? new AppResult<>(profile) : new AppResult<>(1, "failed to update profile");
     }
 
     @Override
@@ -191,7 +191,7 @@ public class UserAccountDaoJdbc implements UserAccountDao {
         String sql = "delete from tbl_profile where profile_id = :id";
 
         int res = template.update(sql, params);
-        return (res > 0) ? new AppResult<>(res) : new AppResult<>("failed to delete profile");
+        return (res > 0) ? new AppResult<>(res) : new AppResult<>(1,"failed to delete profile");
     }
 
     private RowMapper<Account> userMapper() {

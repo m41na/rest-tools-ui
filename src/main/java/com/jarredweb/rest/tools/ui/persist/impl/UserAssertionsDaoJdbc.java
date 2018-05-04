@@ -42,7 +42,7 @@ public class UserAssertionsDaoJdbc implements UserAssertionsDao{
         int res = template.update(sql, new MapSqlParameterSource(params), holder);
         assertion.setId(holder.getKey().longValue());
 
-        return (res > 0) ? new AppResult<>(assertion) : new AppResult<>("failed to create a new assertion");
+        return (res > 0) ? new AppResult<>(assertion) : new AppResult<>(1, "failed to create a new assertion");
     }
 
     @Override
@@ -60,7 +60,7 @@ public class UserAssertionsDaoJdbc implements UserAssertionsDao{
 
         int res = template.update(sql, new MapSqlParameterSource(params));
 
-        return (res > 0) ? new AppResult<>(res) : new AppResult<>("failed to update assertion");
+        return (res > 0) ? new AppResult<>(res) : new AppResult<>(1, "failed to update assertion");
     }
 
     @Override
@@ -71,7 +71,7 @@ public class UserAssertionsDaoJdbc implements UserAssertionsDao{
         String sql = "delete from tbl_endpoint_assert where assert_id = :assert_id";
 
         int res = template.update(sql, params);
-        return (res > 0) ? new AppResult<>(res) : new AppResult<>("failed to delete assertion");
+        return (res > 0) ? new AppResult<>(res) : new AppResult<>(1, "failed to delete assertion");
     }
 
     @Override
@@ -82,7 +82,7 @@ public class UserAssertionsDaoJdbc implements UserAssertionsDao{
         String sql = "SELECT * FROM tbl_endpoint_assert where assert_id = :assert_id";
 
         ApiAssert endpoint = template.queryForObject(sql, params, assertionMapper());
-        return endpoint != null ? new AppResult<>(endpoint) : new AppResult<>("could not find assertion");
+        return endpoint != null ? new AppResult<>(endpoint) : new AppResult<>(1, "could not find assertion");
     }
 
     @Override
@@ -93,7 +93,7 @@ public class UserAssertionsDaoJdbc implements UserAssertionsDao{
         String sql = "SELECT * FROM tbl_endpoint_assert where fk_parent_endp = :fk_parent_endp";
 
         List<ApiAssert<?>> assertions = template.query(sql, params, assertionMapper());
-        return endpoint != null ? new AppResult<>(assertions) : new AppResult<>("could not retrieve assertions for given endpoint");
+        return endpoint != null ? new AppResult<>(assertions) : new AppResult<>(1, "could not retrieve assertions for given endpoint");
     }
     
     private RowMapper<ApiAssert<?>> assertionMapper(){

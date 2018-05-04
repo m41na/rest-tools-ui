@@ -45,7 +45,7 @@ public class UserEndpointsDaoJdbc implements UserEndpointsDao {
         int res = template.update(sql, new MapSqlParameterSource(params), holder);
         collection.setCollectionId(holder.getKey().longValue());
 
-        return (res > 0) ? new AppResult<>(collection) : new AppResult<>("failed to create a new collection");
+        return (res > 0) ? new AppResult<>(collection) : new AppResult<>(1, "failed to create a new collection");
     }
 
     @Override
@@ -57,7 +57,7 @@ public class UserEndpointsDaoJdbc implements UserEndpointsDao {
         String sql = "update tbl_endpoints_list set list_title=:title where list_id=:id";
 
         int res = template.update(sql, params);
-        return (res > 0) ? new AppResult<>(res) : new AppResult<>("failed updating collection");
+        return (res > 0) ? new AppResult<>(res) : new AppResult<>(1, "failed updating collection");
     }
 
     @Override
@@ -68,7 +68,7 @@ public class UserEndpointsDaoJdbc implements UserEndpointsDao {
         String sql = "delete from tbl_endpoints_list where list_id=:id";
 
         int res = template.update(sql, params);
-        return (res > 0) ? new AppResult<>(res) : new AppResult<>("failed deleting collection");
+        return (res > 0) ? new AppResult<>(res) : new AppResult<>(1, "failed deleting collection");
     }
 
     @Override
@@ -80,7 +80,7 @@ public class UserEndpointsDaoJdbc implements UserEndpointsDao {
                 + "inner join tbl_endpoints_list c on e.fk_parent_list=c.list_id WHERE c.list_id=:id";
 
         EndpointsList collection = template.query(sql, params, endpointsListExtractor());
-        return collection != null ? new AppResult<>(collection) : new AppResult<>("could not find collection");
+        return collection != null ? new AppResult<>(collection) : new AppResult<>(1, "could not find collection");
     }
 
     @Override
@@ -124,7 +124,7 @@ public class UserEndpointsDaoJdbc implements UserEndpointsDao {
 
         int res = template.update(sql, new MapSqlParameterSource(params));
 
-        return (res > 0) ? new AppResult<>(endpoint) : new AppResult<>("failed to create a new endpoint");
+        return (res > 0) ? new AppResult<>(endpoint) : new AppResult<>(1, "failed to create a new endpoint");
     }
 
     @Override
@@ -154,7 +154,7 @@ public class UserEndpointsDaoJdbc implements UserEndpointsDao {
 
         int res = template.update(sql, new MapSqlParameterSource(params));
 
-        return (res > 0) ? new AppResult<>(res) : new AppResult<>("failed to update endpoint");
+        return (res > 0) ? new AppResult<>(res) : new AppResult<>(1, "failed to update endpoint");
     }
 
     @Override
@@ -166,7 +166,7 @@ public class UserEndpointsDaoJdbc implements UserEndpointsDao {
         String sql = "delete from tbl_endpoint_item where fk_parent_list = :collection AND endp_id = :endpoint";
 
         int res = template.update(sql, params);
-        return (res > 0) ? new AppResult<>(res) : new AppResult<>("failed to delete endpoint");
+        return (res > 0) ? new AppResult<>(res) : new AppResult<>(1, "failed to delete endpoint");
     }
 
     @Override
@@ -178,7 +178,7 @@ public class UserEndpointsDaoJdbc implements UserEndpointsDao {
         String sql = "SELECT * FROM tbl_endpoint_item where fk_parent_list = :collection AND endp_id = :endpoint";
 
         ApiReq endpoint = template.queryForObject(sql, params, endpointItemMapper());
-        return endpoint != null ? new AppResult<>(endpoint) : new AppResult<>("could not find endpoint");
+        return endpoint != null ? new AppResult<>(endpoint) : new AppResult<>(1, "could not find endpoint");
     }
 
     private ResultSetExtractor<UserEndpoints> userEndpointsExtractor() {
