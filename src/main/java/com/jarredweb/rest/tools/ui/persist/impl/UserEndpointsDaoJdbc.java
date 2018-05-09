@@ -21,7 +21,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import works.hop.rest.tools.api.ApiReq;
-import works.hop.rest.tools.util.SimpleJson;
+import works.hop.rest.tools.util.RestToolsJson;
 
 @Repository
 public class UserEndpointsDaoJdbc implements UserEndpointsDao {
@@ -113,7 +113,7 @@ public class UserEndpointsDaoJdbc implements UserEndpointsDao {
         params.put("query_params", String.join(",", endpoint.getQueryParams()));
         params.put("endp_consumes", endpoint.getConsumes());
         params.put("endp_produces", endpoint.getProduces());
-        params.put("endp_headers", SimpleJson.toJson(endpoint.getHeaders()));
+        params.put("endp_headers", RestToolsJson.toJson(endpoint.getHeaders()));
         params.put("endp_entity", endpoint.getEntity());
         params.put("endp_authorized", String.join(",", endpoint.getAuthorized()));
         params.put("endp_execute", endpoint.getExecute());
@@ -141,7 +141,7 @@ public class UserEndpointsDaoJdbc implements UserEndpointsDao {
         params.put("query_params", String.join(",", endpoint.getQueryParams()));
         params.put("endp_consumes", endpoint.getConsumes());
         params.put("endp_produces", endpoint.getProduces());
-        params.put("endp_headers", SimpleJson.toJson(endpoint.getHeaders()));
+        params.put("endp_headers", RestToolsJson.toJson(endpoint.getHeaders()));
         params.put("endp_entity", endpoint.getEntity());
         params.put("endp_authorized", String.join(",", endpoint.getAuthorized()));
         params.put("endp_execute", endpoint.getExecute());
@@ -235,7 +235,7 @@ public class UserEndpointsDaoJdbc implements UserEndpointsDao {
             req.setEntity(rs.getString("endp_entity"));
             String headers = StringEscapeUtils.unescapeJson(rs.getString("endp_headers"));
             if (headers != null && headers.length() > 0) {
-                req.setHeaders(SimpleJson.fromJson(headers, new TypeReference<Map<String, String>>() {
+                req.setHeaders(RestToolsJson.fromJson(headers, new TypeReference<Map<String, String>>() {
                 }));
             }
             return req;

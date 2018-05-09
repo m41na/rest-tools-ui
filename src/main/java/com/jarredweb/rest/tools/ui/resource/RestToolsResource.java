@@ -43,7 +43,7 @@ import works.hop.rest.tools.client.AssertionResListener;
 import works.hop.rest.tools.client.InputStreamLoader;
 import works.hop.rest.tools.client.MultiPathJsonLoader;
 import works.hop.rest.tools.client.RestConnector;
-import works.hop.rest.tools.util.SimpleJson;
+import works.hop.rest.tools.util.RestToolsJson;
 
 @Path("/")
 public class RestToolsResource {
@@ -175,7 +175,7 @@ public class RestToolsResource {
         
         //prepare response
         StreamingOutput outputStream = (OutputStream output) -> {
-            String json = SimpleJson.toJson(uep);
+            String json = RestToolsJson.toJson(uep);
             output.write(json.getBytes());
         };
         
