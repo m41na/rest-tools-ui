@@ -10,9 +10,9 @@ import com.jarredweb.rest.tools.ui.persist.entity.AccStatus;
 import com.jarredweb.rest.tools.ui.persist.entity.Account;
 import com.jarredweb.rest.tools.ui.persist.entity.Profile;
 import com.jarredweb.rest.tools.ui.service.StartupService;
-import com.jarredweb.webjar.common.bean.AppResult;
-import com.jarredweb.webjar.common.bean.ResStatus;
-import com.jarredweb.webjar.common.exception.AppException;
+import com.jarredweb.zesty.common.bean.AppResult;
+import com.jarredweb.zesty.common.bean.ResStatus;
+import com.jarredweb.zesty.common.exception.AppException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -66,7 +66,7 @@ public class StartupServiceImpl implements StartupService {
         }
 
         // 3. check initialized property
-        if ("true".equals(props.getProperty("app.jdbc.configure")) && "false".equals(props.getProperty("app.initialized"))) {
+        if ("true".equals(props.getProperty("app.jdbc.configure")) && !"true".equals(props.getProperty("app.initialized"))) {
 
             // 4. initialize database schema
             ResourceDatabasePopulator schema = new ResourceDatabasePopulator();

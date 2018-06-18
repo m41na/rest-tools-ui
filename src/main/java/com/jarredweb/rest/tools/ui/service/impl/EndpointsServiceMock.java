@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jarredweb.rest.tools.ui.model.*;
 import com.jarredweb.rest.tools.ui.service.EndpointsService;
-import com.jarredweb.webjar.common.bean.AppResult;
+import com.jarredweb.zesty.common.bean.AppResult;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;

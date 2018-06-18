@@ -5,7 +5,7 @@ import com.jarredweb.rest.tools.ui.persist.entity.Account;
 import com.jarredweb.rest.tools.ui.persist.entity.Profile;
 import com.jarredweb.rest.tools.ui.persist.entity.AccRole;
 import com.jarredweb.rest.tools.ui.persist.entity.AccStatus;
-import com.jarredweb.webjar.common.bean.AppResult;
+import com.jarredweb.zesty.common.bean.AppResult;
 import static org.junit.Assert.assertNotNull;
 
 import java.sql.ResultSetMetaData;

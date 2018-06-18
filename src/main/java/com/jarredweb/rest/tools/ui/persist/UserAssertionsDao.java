@@ -1,6 +1,6 @@
 package com.jarredweb.rest.tools.ui.persist;
 
-import com.jarredweb.webjar.common.bean.AppResult;
+import com.jarredweb.zesty.common.bean.AppResult;
 import java.util.List;
 import works.hop.rest.tools.api.ApiAssert;
 

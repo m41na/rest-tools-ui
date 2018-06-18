@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.jarredweb.rest.tools.ui.model.EndpointsList;
 import com.jarredweb.rest.tools.ui.model.UserEndpoints;
 import com.jarredweb.rest.tools.ui.persist.UserEndpointsDao;
-import com.jarredweb.webjar.common.bean.AppResult;
+import com.jarredweb.zesty.common.bean.AppResult;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;

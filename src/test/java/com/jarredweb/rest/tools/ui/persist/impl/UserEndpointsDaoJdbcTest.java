@@ -4,7 +4,7 @@ import com.jarredweb.rest.tools.ui.model.EndpointsList;
 import com.jarredweb.rest.tools.ui.model.UserEndpoints;
 import com.jarredweb.rest.tools.ui.persist.RestToolsTestConfig;
 import com.jarredweb.rest.tools.ui.persist.UserEndpointsDao;
-import com.jarredweb.webjar.common.bean.AppResult;
+import com.jarredweb.zesty.common.bean.AppResult;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;

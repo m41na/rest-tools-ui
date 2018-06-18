@@ -1,7 +1,7 @@
 package com.jarredweb.rest.tools.ui.persist.impl;
 
 import com.jarredweb.rest.tools.ui.persist.UserAssertionsDao;
-import com.jarredweb.webjar.common.bean.AppResult;
+import com.jarredweb.zesty.common.bean.AppResult;
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.List;

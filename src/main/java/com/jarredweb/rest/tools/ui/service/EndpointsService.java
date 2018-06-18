@@ -3,7 +3,7 @@ package com.jarredweb.rest.tools.ui.service;
 import com.jarredweb.rest.tools.ui.model.EndpointsList;
 import com.jarredweb.rest.tools.ui.model.EndpointsModel;
 import com.jarredweb.rest.tools.ui.model.PairValue;
-import com.jarredweb.webjar.common.bean.AppResult;
+import com.jarredweb.zesty.common.bean.AppResult;
 import java.util.List;
 import works.hop.rest.tools.api.ApiAssert;
 import works.hop.rest.tools.api.ApiReq;

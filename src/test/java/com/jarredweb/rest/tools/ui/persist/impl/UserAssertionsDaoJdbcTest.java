@@ -2,7 +2,7 @@ package com.jarredweb.rest.tools.ui.persist.impl;
 
 import com.jarredweb.rest.tools.ui.persist.RestToolsTestConfig;
 import com.jarredweb.rest.tools.ui.persist.UserAssertionsDao;
-import com.jarredweb.webjar.common.bean.AppResult;
+import com.jarredweb.zesty.common.bean.AppResult;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;

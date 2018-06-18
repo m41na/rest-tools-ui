@@ -18,20 +18,20 @@
         <!-- web framework -->
         <dependency>
             <groupId>com.jarredweb.works</groupId>
-            <artifactId>webjar-http</artifactId>
-            <version>0.4.1-beta</version>
+            <artifactId>zesty-http</artifactId>
+            <version>0.5.0-beta</version>
         </dependency>
         
         <dependency>
             <groupId>com.jarredweb.works</groupId>
-            <artifactId>webjar-common</artifactId>
-            <version>0.4.1-beta</version>
+            <artifactId>zesty-common</artifactId>
+            <version>0.5.0-beta</version>
         </dependency>
         
         <dependency>
             <groupId>com.jarredweb.works</groupId>
-            <artifactId>webjar-tasklet</artifactId>
-            <version>0.4.1-beta</version>
+            <artifactId>zesty-tasklet</artifactId>
+            <version>0.5.0-beta</version>
         </dependency>
         
         <!-- rest tools -->
@@ -134,6 +134,31 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>dist/assembly.xml</descriptor>
+                    </descriptors>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.jarredweb.rest.tools.ui.app.RestToolsRunner</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

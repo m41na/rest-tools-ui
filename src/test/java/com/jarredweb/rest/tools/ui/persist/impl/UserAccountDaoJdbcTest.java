@@ -4,7 +4,7 @@ import com.jarredweb.rest.tools.ui.persist.RestToolsTestConfig;
 import com.jarredweb.rest.tools.ui.persist.UserAccountDao;
 import com.jarredweb.rest.tools.ui.persist.entity.Account;
 import com.jarredweb.rest.tools.ui.persist.entity.Profile;
-import com.jarredweb.webjar.common.bean.AppResult;
+import com.jarredweb.zesty.common.bean.AppResult;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

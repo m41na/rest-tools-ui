@@ -7,7 +7,7 @@ import com.jarredweb.rest.tools.ui.persist.UserEndpointsDao;
 import com.jarredweb.rest.tools.ui.service.EndpointsCache;
 import com.jarredweb.rest.tools.ui.service.EndpointsService;
 import com.jarredweb.rest.tools.ui.service.PersistService;
-import com.jarredweb.webjar.common.bean.AppResult;
+import com.jarredweb.zesty.common.bean.AppResult;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
