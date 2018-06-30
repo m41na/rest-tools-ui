@@ -12,4 +12,4 @@ target/
 nbactions.xml
 /nbproject/
 **/data/*
-
+**/*.mv.db
