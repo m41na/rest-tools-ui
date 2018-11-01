@@ -1,7 +1,8 @@
 package com.jarredweb.rest.tools.ui.provider;
 
-import com.jarredweb.rest.tools.ui.model.AppUser;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+
+import com.jarredweb.domain.users.AppUser;
 
 public class AppUserBinder extends AbstractBinder {
 

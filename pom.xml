@@ -22,97 +22,18 @@
             <version>0.5.0-beta</version>
         </dependency>
         
+         <!-- rest-tools plugin -->
+        <dependency>
+			<groupId>com.jarredweb.works</groupId>
+			<artifactId>plugins-users-service</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+        <!-- rest-tools plugin -->
         <dependency>
             <groupId>com.jarredweb.works</groupId>
-            <artifactId>zesty-common</artifactId>
-            <version>0.5.0-beta</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.jarredweb.works</groupId>
-            <artifactId>zesty-tasklet</artifactId>
-            <version>0.5.0-beta</version>
-        </dependency>
-        
-        <!-- rest tools -->
-        <dependency>
-            <groupId>com.jarredweb.works</groupId>
-            <artifactId>rest-tools</artifactId>
-            <version>0.1</version>
-        </dependency>
-        
-        <!-- logging impl -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        
-        <!-- Spring Core -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-
-        <!-- Spring context -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-
-        <!-- Spring JDBC -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-
-        <!-- H2 DB -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.195</version>
-        </dependency>
-
-        <!--  Connection pool -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-dbcp2</artifactId>
-            <version>${dbcp.version}</version>
-        </dependency>
-
-        <!-- spring testing -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${spring.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>javax.servlet.api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.servlet.jsp</groupId>
-                    <artifactId>javax.servlet.jsp.api</artifactId>
-                </exclusion>
-            </exclusions>
-            <scope>test</scope>
-        </dependency>
-        
-        <!-- encryption -->
-        <dependency>
-            <groupId>org.jasypt</groupId>
-            <artifactId>jasypt</artifactId>
-            <version>1.9.2</version>
-        </dependency>
-        
-        <!-- commons-text -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
-            <version>1.2</version>
+            <artifactId>plugins-rest-tools</artifactId>
+            <version>${project.version}</version>
         </dependency>
         
         <!-- unit testing -->

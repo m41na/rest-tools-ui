@@ -1,18 +1,19 @@
 package com.jarredweb.rest.tools.ui.provider;
 
-import com.jarredweb.rest.tools.ui.model.AppUser;
-import com.jarredweb.rest.tools.ui.persist.UserAccountDao;
-import com.jarredweb.rest.tools.ui.persist.entity.Account;
-import com.jarredweb.zesty.common.bean.AppResult;
 import javax.inject.Inject;
 
 import org.glassfish.hk2.api.Factory;
 import org.springframework.core.env.Environment;
 
+import com.jarredweb.common.util.AppResult;
+import com.jarredweb.domain.users.Account;
+import com.jarredweb.domain.users.AppUser;
+import com.jarredweb.plugins.users.dao.UserDao;
+
 public class AppUserFactory implements Factory<AppUser> {
 
     @Inject
-    private UserAccountDao userDao;
+    private UserDao userDao;
     @Inject
     private Environment env;
 

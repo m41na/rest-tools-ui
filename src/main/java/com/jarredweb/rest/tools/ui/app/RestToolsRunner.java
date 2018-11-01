@@ -1,12 +1,13 @@
 package com.jarredweb.rest.tools.ui.app;
 
-import com.jarredweb.rest.tools.ui.config.RestToolsConfig;
-import com.jarredweb.rest.tools.ui.provider.AppUserBinder;
-import com.jarredweb.rest.tools.ui.service.StartupService;
-import com.jarredweb.zesty.http.app.ZestyRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+
+import com.jarredweb.plugins.users.service.StartupService;
+import com.jarredweb.rest.tools.ui.config.RestUIConfig;
+import com.jarredweb.rest.tools.ui.provider.AppUserBinder;
+import com.jarredweb.zesty.http.app.ZestyRunner;
 
 public class RestToolsRunner extends ZestyRunner {
     
@@ -19,7 +20,7 @@ public class RestToolsRunner extends ZestyRunner {
     }
 
     public static void main(String... args) {
-        String configClass = RestToolsConfig.class.getName();
+        String configClass = RestUIConfig.class.getName();
         LOG.info("loading configuration for {} from {}", RestToolsRunner.class.getName(), configClass);
         System.setProperty("context.lookup", configClass);
         new RestToolsRunner()
