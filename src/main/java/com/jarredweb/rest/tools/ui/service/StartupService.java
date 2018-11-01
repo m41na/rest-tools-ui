@@ -1,12 +1,21 @@
 package com.jarredweb.rest.tools.ui.service;
 
-import com.jarredweb.rest.tools.ui.persist.entity.Account;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public interface StartupService {
-    
-    void initialize();
+import works.hop.plugins.loader.PluginCentral;
 
-    Account getUserAccount(String username);
+@Component
+public class StartupService implements ServiceFactory{
 
-    void onInitialized();
+	private PluginCentral central;
+	
+	public StartupService(@Autowired PluginCentral central) {
+		this.central = central;
+	}
+	
+	@Override
+	public Object get() {
+		return central.getInstance("com.jarredweb.plugins.users.StartupPlugin", "StartupService");
+	}
 }
