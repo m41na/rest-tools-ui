@@ -35,7 +35,7 @@ import com.jarredweb.common.util.ResStatus;
 import com.jarredweb.domain.simple.tools.Navigation;
 import com.jarredweb.domain.simple.tools.RouteLink;
 import com.jarredweb.domain.users.AppUser;
-import com.jarredweb.rest.tools.ui.service.RestToolsService;
+import com.jarredweb.rest.tools.ui.features.EndpointsFeatures;
 
 import works.hop.rest.tools.model.ApiAssert;
 import works.hop.rest.tools.model.ApiReq;
@@ -49,7 +49,7 @@ public class RestToolsResource {
     @Context
     private UriInfo uriInfo;
     @Inject
-    private RestToolsService service;
+    private EndpointsFeatures service;
 
 	@GET
     public Response homeView(@Context AppUser user) {

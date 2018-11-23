@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.jarredweb.works</groupId>
-	<artifactId>rest-tools-plugin-ui</artifactId>
+	<artifactId>rest-tools-web-plugin</artifactId>
 	<version>0.1</version>
 	<packaging>jar</packaging>
 

@@ -1,4 +1,4 @@
-package com.jarredweb.rest.tools.ui.service;
+package com.jarredweb.rest.tools.ui.features;
 
 import java.io.InputStream;
 import java.util.List;
@@ -13,7 +13,7 @@ import works.hop.rest.tools.model.EndpointsList;
 import works.hop.rest.tools.model.EndpointsModel;
 import works.hop.rest.tools.model.UserEndpoints;
 
-public interface RestToolsService {
+public interface EndpointsFeatures {
 
 	ApplicationModel getApplicationModel();
 	
