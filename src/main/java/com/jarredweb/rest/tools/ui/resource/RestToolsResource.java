@@ -31,13 +31,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.jarredweb.common.util.AppException;
+import com.jarredweb.common.util.AppResult;
+import com.jarredweb.common.util.ResStatus;
 import com.jarredweb.domain.simple.tools.Navigation;
 import com.jarredweb.domain.simple.tools.RouteLink;
 import com.jarredweb.domain.users.AppUser;
 import com.jarredweb.plugins.rest.tools.service.EndpointsService;
-import com.jarredweb.zesty.common.bean.AppResult;
-import com.jarredweb.zesty.common.bean.ResStatus;
-import com.jarredweb.zesty.common.exception.AppException;
 
 import works.hop.rest.tools.client.InputStreamLoader;
 import works.hop.rest.tools.model.ApiAssert;
@@ -153,8 +153,8 @@ public class RestToolsResource {
         }
         else{
             Map<String, Object> model = new HashMap<>();
-            model.put("error", created.getMessage());
-            model.put("reason", created.getReason());
+            model.put("error", created.getError());
+            model.put("reason", created.getMessage());
             model.put("userId", userId);
             model.put("title", title);
             return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
@@ -173,8 +173,8 @@ public class RestToolsResource {
         }
         else{
             Map<String, Object> model = new HashMap<>();
-            model.put("error", updated.getMessage());
-            model.put("reason", updated.getReason());
+            model.put("error", updated.getError());
+            model.put("reason", updated.getMessage());
             model.put("userId", userId);
             model.put("collectionId", collId);
             model.put("title", title);
@@ -194,8 +194,8 @@ public class RestToolsResource {
         }
         else{
             Map<String, Object> model = new HashMap<>();
-            model.put("error", removed.getMessage());
-            model.put("reason", removed.getReason());
+            model.put("error", removed.getError());
+            model.put("reason", removed.getMessage());
             model.put("userId", userId);
             model.put("collectionId", collId);
             return Response.status(Response.Status.BAD_REQUEST).entity(model).build();
@@ -215,8 +215,8 @@ public class RestToolsResource {
         }
         else{
             Map<String, Object> model = new HashMap<>();
-            model.put("error", created.getMessage());
-            model.put("reason", created.getReason());
+            model.put("error", created.getError());
+            model.put("reason", created.getMessage());
             model.put("userId", userId);
             model.put("collectionId", collId);
             model.put("entity", endpoint);
@@ -237,8 +237,8 @@ public class RestToolsResource {
         }
         else{
             Map<String, Object> model = new HashMap<>();
-            model.put("error", updated.getMessage());
-            model.put("reason", updated.getReason());
+            model.put("error", updated.getError());
+            model.put("reason", updated.getMessage());
             model.put("userId", userId);
             model.put("collectionId", collId);
             model.put("entity", endpoint);
@@ -258,8 +258,8 @@ public class RestToolsResource {
         }
         else{
             Map<String, Object> model = new HashMap<>();
-            model.put("error", removed.getMessage());
-            model.put("reason", removed.getReason());
+            model.put("error", removed.getError());
+            model.put("reason", removed.getMessage());
             model.put("userId", userId);
             model.put("collectionId", collId);
             model.put("endpointId", endpoint);
@@ -280,8 +280,8 @@ public class RestToolsResource {
         }
         else{
             Map<String, Object> model = new HashMap<>();
-            model.put("error", created.getMessage());
-            model.put("reason", created.getReason());
+            model.put("error", created.getError());
+            model.put("reason", created.getMessage());
             model.put("userId", userId);
             model.put("collectionId", collId);
             model.put("entity", assertion);
@@ -302,8 +302,8 @@ public class RestToolsResource {
         }
         else{
             Map<String, Object> model = new HashMap<>();
-            model.put("error", updated.getMessage());
-            model.put("reason", updated.getReason());
+            model.put("error", updated.getError());
+            model.put("reason", updated.getMessage());
             model.put("userId", userId);
             model.put("collectionId", collId);
             model.put("entity", assertion);
@@ -323,8 +323,8 @@ public class RestToolsResource {
         }
         else{
             Map<String, Object> model = new HashMap<>();
-            model.put("error", removed.getMessage());
-            model.put("reason", removed.getReason());
+            model.put("error", removed.getError());
+            model.put("reason", removed.getMessage());
             model.put("userId", userId);
             model.put("collectionId", collId);
             model.put("endpointId", endpoint);

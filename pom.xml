@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     
     <groupId>com.jarredweb.works</groupId>
-    <artifactId>rest-tools-ui</artifactId>
+    <artifactId>rest-tools-web</artifactId>
     <version>0.1</version>
     <packaging>jar</packaging>
     
