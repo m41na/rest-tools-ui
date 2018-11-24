@@ -4,10 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
+<<<<<<< HEAD
+=======
+import com.jarredweb.plugins.users.service.StartupService;
+>>>>>>> 794b85d779fcc7eeb54e59c1ff59adeccd658b7d
 import com.jarredweb.rest.tools.ui.config.RestUIConfig;
 import com.jarredweb.rest.tools.ui.provider.AppUserBinder;
 import com.jarredweb.zesty.http.app.ZestyRunner;
 
+<<<<<<< HEAD
 import works.hop.plugins.api.Poppin;
 import works.hop.plugins.loader.PluginCentral;
 

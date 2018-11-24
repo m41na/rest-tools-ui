@@ -1,46 +1,6 @@
 package com.jarredweb.rest.tools.ui.resource;
 
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
-
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.jarredweb.common.util.AppException;
-import com.jarredweb.common.util.AppResult;
-import com.jarredweb.common.util.ResStatus;
-import com.jarredweb.domain.simple.tools.Navigation;
-import com.jarredweb.domain.simple.tools.RouteLink;
-import com.jarredweb.domain.users.AppUser;
-import com.jarredweb.rest.tools.ui.features.EndpointsFeatures;
-
-import works.hop.rest.tools.model.ApiAssert;
-import works.hop.rest.tools.model.ApiReq;
-import works.hop.rest.tools.model.EndpointsList;
-import works.hop.rest.tools.model.UserEndpoints;
 
 @Path("/")
 public class RestToolsResource {
@@ -114,6 +74,7 @@ public class RestToolsResource {
             @FormDataParam("file") InputStream uploadStream,
             @FormDataParam("file") FormDataContentDisposition fileMetaData) {
 		List<EndpointsList> uendp = service.uploadEndpoints(userId, uploadStream);
+		//List<UserEndpoints> uendp = new InputStreamLoader(uploadStream).readValue(new TypeReference<List<UserEndpoints>>(){});
         //prepare and send response
         return Response.ok(uendp).build();
     }
