@@ -1,50 +1,6 @@
 package com.jarredweb.rest.tools.ui.resource;
 
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
-
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.jarredweb.common.util.AppException;
-import com.jarredweb.common.util.AppResult;
-import com.jarredweb.common.util.ResStatus;
-import com.jarredweb.domain.simple.tools.Navigation;
-import com.jarredweb.domain.simple.tools.RouteLink;
-import com.jarredweb.domain.users.AppUser;
-import com.jarredweb.plugins.rest.tools.service.EndpointsService;
-
-import works.hop.rest.tools.client.InputStreamLoader;
-import works.hop.rest.tools.model.ApiAssert;
-import works.hop.rest.tools.model.ApiReq;
-import works.hop.rest.tools.model.EndpointsList;
-import works.hop.rest.tools.model.UserEndpoints;
-import works.hop.rest.tools.util.RestToolsJson;
 
 @Path("/")
 public class RestToolsResource {
@@ -53,8 +9,7 @@ public class RestToolsResource {
     @Context
     private UriInfo uriInfo;
     @Inject
-    @Named("persist")
-    private EndpointsService service;
+    private EndpointsFeatures service;
 
 	@GET
     public Response homeView(@Context AppUser user) {
@@ -118,7 +73,8 @@ public class RestToolsResource {
     public Response uploadEndpoints(@PathParam("uid") Long userId,
             @FormDataParam("file") InputStream uploadStream,
             @FormDataParam("file") FormDataContentDisposition fileMetaData) {
-		List<UserEndpoints> uendp = new InputStreamLoader(uploadStream).readValue(new TypeReference<List<UserEndpoints>>(){});
+		List<EndpointsList> uendp = service.uploadEndpoints(userId, uploadStream);
+		//List<UserEndpoints> uendp = new InputStreamLoader(uploadStream).readValue(new TypeReference<List<UserEndpoints>>(){});
         //prepare and send response
         return Response.ok(uendp).build();
     }
@@ -131,7 +87,7 @@ public class RestToolsResource {
         
         //prepare response
         StreamingOutput outputStream = (OutputStream output) -> {
-            String json = RestToolsJson.toJson(uep);
+            String json = service.endpointsToJson(uep);;
             output.write(json.getBytes());
         };
         
@@ -145,7 +101,7 @@ public class RestToolsResource {
     @Path("/rest/{uid}/collection")
     @Produces(MediaType.APPLICATION_JSON)
     public Response createCollection(@PathParam("uid") Long userId, @FormParam("title") String title) {
-        AppResult<EndpointsList> created = service.addNewCollection(userId, title);
+        AppResult<EndpointsList> created = service.createCollection(userId, title);
         
         //prepare and send response
         if(created.getCode() == 0){  
@@ -186,7 +142,7 @@ public class RestToolsResource {
     @Path("/rest/{uid}/collection/{cid}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteCollection(@PathParam("uid") Long userId, @PathParam("cid") Long collId) {
-        AppResult<Integer> removed = service.dropCollection(userId, collId);
+        AppResult<Integer> removed = service.deleteCollection(userId, collId);
         
         //prepare and send response
         if(removed.getCode() == 0){  
@@ -207,7 +163,7 @@ public class RestToolsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createEndpoint(@PathParam("uid") Long userId, @PathParam("cid") Long collId, ApiReq endpoint) {
-        AppResult<ApiReq> created = service.addNewEndpoint(userId, collId, endpoint);
+        AppResult<ApiReq> created = service.createEndpoint(userId, collId, endpoint);
         
         //prepare and send response
         if(created.getCode() == 0){  
@@ -250,7 +206,7 @@ public class RestToolsResource {
     @Path("/rest/{uid}/collection/{cid}/endpoint/{eid}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteEndpoint(@PathParam("uid") Long userId, @PathParam("cid") Long collId, @PathParam("eid") String endpoint) {
-        AppResult<Integer> removed = service.dropEndpoint(userId, collId, endpoint);
+        AppResult<Integer> removed = service.deleteEndpoint(userId, collId, endpoint);
         
         //prepare and send response
         if(removed.getCode() == 0){  
@@ -272,7 +228,7 @@ public class RestToolsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createAssertion(@PathParam("uid") Long userId, @PathParam("cid") Long collId, @PathParam("eid") String endpId, ApiAssert<String> assertion) {
-        AppResult<ApiAssert> created = service.addNewAssertion(userId, collId, endpId, assertion);
+        AppResult<ApiAssert> created = service.createAssertion(userId, collId, endpId, assertion);
         
         //prepare and send response
         if(created.getCode() == 0){  
@@ -315,7 +271,7 @@ public class RestToolsResource {
     @Path("/rest/{uid}/collection/{cid}/endpoint/{eid}/assertion/{aid}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteAssertiont(@PathParam("uid") Long userId, @PathParam("cid") Long collId, @PathParam("eid") String endpoint, @PathParam("aid") Long assertId) {
-        AppResult<Integer> removed = service.dropAssertion(userId, collId, endpoint, assertId);
+        AppResult<Integer> removed = service.deleteAssertiont(userId, collId, endpoint, assertId);
         
         //prepare and send response
         if(removed.getCode() == 0){  
