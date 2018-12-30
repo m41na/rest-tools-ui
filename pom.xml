@@ -5,7 +5,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.jarredweb.works</groupId>
+	<groupId>com.practicaldime.works</groupId>
 	<artifactId>rest-tools-web-plugin</artifactId>
 	<version>0.1</version>
 	<packaging>jar</packaging>
@@ -20,38 +20,38 @@
 	<dependencies>
 		<!-- web framework -->
 		<dependency>
-			<groupId>com.jarredweb.works</groupId>
+			<groupId>com.practicaldime.works</groupId>
 			<artifactId>zesty-http</artifactId>
 			<version>0.5.0-beta</version>
 		</dependency>
 
 		<!-- plugins-api -->
 		<dependency>
-			<groupId>com.jarredweb.works</groupId>
+			<groupId>com.practicaldime.works</groupId>
 			<artifactId>plugins-api</artifactId>
 			<version>0.1</version>
 		</dependency>
 
 		<dependency>
-			<groupId>com.jarredweb.works</groupId>
+			<groupId>com.practicaldime.works</groupId>
 			<artifactId>common-utils</artifactId>
 			<version>0.1</version>
 		</dependency>
 		
 		<dependency>
-			<groupId>com.jarredweb.works</groupId>
+			<groupId>com.practicaldime.works</groupId>
 			<artifactId>domain-users</artifactId>
 			<version>0.1</version>
 		</dependency>
 
 		<dependency>
-			<groupId>com.jarredweb.works</groupId>
+			<groupId>com.practicaldime.works</groupId>
 			<artifactId>domain-rest</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>com.jarredweb.works</groupId>
+			<groupId>com.practicaldime.works</groupId>
 			<artifactId>domain-view</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -112,7 +112,7 @@
 					</descriptors>
 					<archive>
 						<manifest>
-							<mainClass>com.jarredweb.rest.tools.ui.app.RestToolsRunner</mainClass>
+							<mainClass>com.practicaldime.rest.tools.ui.app.RestToolsRunner</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -132,7 +132,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     
-    <groupId>com.jarredweb.works</groupId>
+    <groupId>com.practicaldime.works</groupId>
     <artifactId>rest-tools-web</artifactId>
     <version>0.1</version>
     <packaging>jar</packaging>
@@ -147,21 +147,21 @@
     <dependencies>
         <!-- web framework -->
         <dependency>
-            <groupId>com.jarredweb.works</groupId>
+            <groupId>com.practicaldime.works</groupId>
             <artifactId>zesty-http</artifactId>
             <version>0.5.0-beta</version>
         </dependency>
         
          <!-- rest-tools plugin -->
         <dependency>
-			<groupId>com.jarredweb.works</groupId>
+			<groupId>com.practicaldime.works</groupId>
 			<artifactId>plugins-users-service</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		
         <!-- rest-tools plugin -->
         <dependency>
-            <groupId>com.jarredweb.works</groupId>
+            <groupId>com.practicaldime.works</groupId>
             <artifactId>plugins-rest-tools</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -197,7 +197,7 @@
                     </descriptors>
                     <archive>
                         <manifest>
-                            <mainClass>com.jarredweb.rest.tools.ui.app.RestToolsRunner</mainClass>
+                            <mainClass>com.practicaldime.rest.tools.ui.app.RestToolsRunner</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
