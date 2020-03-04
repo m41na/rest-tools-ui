@@ -1,17 +1,12 @@
 package com.jarredweb.rest.tools.ui.features;
 
+import com.practicaldime.common.entity.rest.*;
+import com.practicaldime.common.util.AResult;
+import com.practicaldime.rest.tools.api.ApiReq;
+
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-
-import com.jarredweb.common.util.AppResult;
-
-import works.hop.rest.tools.model.ApiAssert;
-import works.hop.rest.tools.model.ApiReq;
-import works.hop.rest.tools.model.ApplicationModel;
-import works.hop.rest.tools.model.EndpointsList;
-import works.hop.rest.tools.model.EndpointsModel;
-import works.hop.rest.tools.model.UserEndpoints;
 
 public interface EndpointsFeatures {
 
@@ -31,21 +26,21 @@ public interface EndpointsFeatures {
 	
 	String endpointsToJson(UserEndpoints endps);
 
-	AppResult<EndpointsList> createCollection(Long userId, String title);
+	AResult<EndpointsList> createCollection(Long userId, String title);
 
-	AppResult<Integer> updateCollection(Long userId, Long collId, String title);
+	AResult<Integer> updateCollection(Long userId, Long collId, String title);
 
-	AppResult<Integer> deleteCollection(Long userId, Long collId);
+	AResult<Integer> deleteCollection(Long userId, Long collId);
 
-	AppResult<ApiReq> createEndpoint(Long userId, Long collId, ApiReq endpoint);
+	AResult<ApiReq> createEndpoint(Long userId, Long collId, ApiReq endpoint);
 
-	AppResult<Integer> updateEndpoint(Long userId, Long collId, ApiReq endpoint);
+	AResult<Integer> updateEndpoint(Long userId, Long collId, ApiReq endpoint);
 
-	AppResult<Integer> deleteEndpoint(Long userId, Long collId, String endpoint);
+	AResult<Integer> deleteEndpoint(Long userId, Long collId, String endpoint);
 
-	AppResult<ApiAssert> createAssertion(Long userId, Long collId, String endpId, ApiAssert<String> assertion);
+	AResult<ApiAssert> createAssertion(Long userId, Long collId, String endpId, ApiAssert<String> assertion);
 
-	AppResult<Integer> updateAssertion(Long userId, Long collId, String endpId, ApiAssert<String> assertion);
+	AResult<Integer> updateAssertion(Long userId, Long collId, String endpId, ApiAssert<String> assertion);
 
-	AppResult<Integer> deleteAssertiont(Long userId, Long collId, String endpoint, Long assertId);
+	AResult<Integer> deleteAssertiont(Long userId, Long collId, String endpoint, Long assertId);
 }

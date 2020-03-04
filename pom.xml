@@ -1,169 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>com.practicaldime.works</groupId>
-	<artifactId>rest-tools-web-plugin</artifactId>
-	<version>0.1</version>
-	<packaging>jar</packaging>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<slf4j.version>1.7.25</slf4j.version>
-		<spring.version>4.3.20.RELEASE</spring.version>
-		<dbcp.version>2.2.0</dbcp.version>
-	</properties>
-
-	<dependencies>
-		<!-- web framework -->
-		<dependency>
-			<groupId>com.practicaldime.works</groupId>
-			<artifactId>zesty-http</artifactId>
-			<version>0.5.0-beta</version>
-		</dependency>
-
-		<!-- plugins-api -->
-		<dependency>
-			<groupId>com.practicaldime.works</groupId>
-			<artifactId>plugins-api</artifactId>
-			<version>0.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.practicaldime.works</groupId>
-			<artifactId>common-utils</artifactId>
-			<version>0.1</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>com.practicaldime.works</groupId>
-			<artifactId>domain-users</artifactId>
-			<version>0.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.practicaldime.works</groupId>
-			<artifactId>domain-rest</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.practicaldime.works</groupId>
-			<artifactId>domain-view</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<!-- aspectj -->
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjweaver</artifactId>
-			<version>1.9.2</version>
-		</dependency>
-
-		<!-- unit testing -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.7.0</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.0</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<shadedArtifactAttached>true</shadedArtifactAttached>
-							<shadedClassifierName>shaded</shadedClassifierName>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>3.1.0</version>
-				<configuration>
-					<descriptors>
-						<descriptor>dist/assembly.xml</descriptor>
-					</descriptors>
-					<archive>
-						<manifest>
-							<mainClass>com.practicaldime.rest.tools.ui.app.RestToolsRunner</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id> <!-- this is used for inheritance merges -->
-						<phase>package</phase> <!-- bind to the packaging phase -->
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
-=======
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     
     <groupId>com.practicaldime.works</groupId>
-    <artifactId>rest-tools-web</artifactId>
+    <artifactId>rest-tools-ui</artifactId>
     <version>0.1</version>
     <packaging>jar</packaging>
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4j.version>1.7.25</slf4j.version>
-        <spring.version>4.3.20.RELEASE</spring.version>
+        <spring.version>5.2.3.RELEASE</spring.version>
         <dbcp.version>2.2.0</dbcp.version>
     </properties>
     
     <dependencies>
+        <!-- tools framework -->
+        <dependency>
+            <groupId>com.practicaldime.works</groupId>
+            <artifactId>rest-tools</artifactId>
+            <version>0.1</version>
+        </dependency>
+
         <!-- web framework -->
         <dependency>
             <groupId>com.practicaldime.works</groupId>
-            <artifactId>zesty-http</artifactId>
-            <version>0.5.0-beta</version>
+            <artifactId>router-http</artifactId>
+            <version>0.2.0</version>
         </dependency>
-        
-         <!-- rest-tools plugin -->
-        <dependency>
-			<groupId>com.practicaldime.works</groupId>
-			<artifactId>plugins-users-service</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		
-        <!-- rest-tools plugin -->
+
+        <!-- plugins -->
         <dependency>
             <groupId>com.practicaldime.works</groupId>
-            <artifactId>plugins-rest-tools</artifactId>
-            <version>${project.version}</version>
+            <artifactId>plugins-api</artifactId>
+            <version>0.1</version>
+        </dependency>
+
+        <!-- common modules -->
+        <dependency>
+            <groupId>com.practicaldime.works</groupId>
+            <artifactId>common-entities</artifactId>
+            <version>0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.practicaldime.works</groupId>
+            <artifactId>common-utils</artifactId>
+            <version>0.1</version>
+        </dependency>
+
+        <!-- spring dependency -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
         </dependency>
         
         <!-- unit testing -->
@@ -186,6 +76,24 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.0</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<shadedArtifactAttached>true</shadedArtifactAttached>
+							<shadedClassifierName>shaded</shadedClassifierName>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
             
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -213,5 +121,4 @@
             </plugin>
         </plugins>
     </build>
->>>>>>> 794b85d779fcc7eeb54e59c1ff59adeccd658b7d
 </project>

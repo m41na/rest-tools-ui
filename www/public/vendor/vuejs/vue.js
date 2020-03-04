@@ -1847,9 +1847,9 @@ function nextTick (cb, ctx) {
   if (!pending) {
     pending = true;
     if (useMacroTask) {
-      macroTimerFunc();
+      macroTimerpush();
     } else {
-      microTimerFunc();
+      microTimerpush();
     }
   }
   // $flow-disable-line

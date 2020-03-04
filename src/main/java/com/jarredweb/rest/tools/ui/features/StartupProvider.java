@@ -1,13 +1,12 @@
 package com.jarredweb.rest.tools.ui.features;
 
+import com.practicaldime.plugins.loader.PluginCentral;
+import com.practicaldime.plugins.util.ServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import works.hop.plugins.loader.PluginCentral;
-import works.hop.plugins.util.ServiceProvider;
-
 @Component
-public class StartupProvider implements ServiceProvider{
+public class StartupProvider implements ServiceProvider {
 
 	private PluginCentral central;
 	

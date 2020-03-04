@@ -13,3 +13,6 @@ nbactions.xml
 /nbproject/
 **/data/*
 **/*.mv.db
+*.iml
+.idea
+
