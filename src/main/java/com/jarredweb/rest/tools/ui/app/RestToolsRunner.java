@@ -1,6 +1,7 @@
 package com.jarredweb.rest.tools.ui.app;
 
 import com.jarredweb.rest.tools.ui.config.RestUIConfig;
+import com.jarredweb.rest.tools.ui.resource.RestToolsResource;
 import com.practicaldime.plugins.api.Poppin;
 import com.practicaldime.plugins.loader.PluginCentral;
 import com.practicaldime.router.core.server.IServer;
@@ -40,6 +41,7 @@ public class RestToolsRunner  {
         ApplicationContext ctx = new AnnotationConfigApplicationContext(RestUIConfig.class);
 
         initApplication(ctx);
+        RestToolsResource resources = ctx.getBean(RestToolsResource.class);
 
         Rest rest = new Rest(){
 
@@ -49,14 +51,10 @@ public class RestToolsRunner  {
             }
 
             @Override
-            public Function<IServer, IServer> augment() {
-                return null;
+            public Function<Map<String, String>, IServer> build(IServer iServer) {
+                return (props) -> resources.link(iServer);
             }
         };
-
-        new RestToolsRunner()
-                .packages("com.jarredweb.rest.tools.ui.resource")
-                .component(new AppUserBinder())
-                .create(args);
+        rest.start(args);
     }
 }

@@ -1,10 +1,9 @@
 package com.jarredweb.rest.tools.ui.provider;
 
-import javax.inject.Inject;
-
 import com.practicaldime.common.entity.users.Account;
 import com.practicaldime.common.model.AppUser;
 import com.practicaldime.plugins.api.Poppin;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import com.jarredweb.rest.tools.ui.features.StartupProvider;
 import org.springframework.stereotype.Component;
@@ -14,9 +13,9 @@ import java.util.function.Supplier;
 @Component
 public class AppUserProvider implements Supplier<AppUser> {
 
-	@Inject
+	@Autowired
 	private StartupProvider service;
-	@Inject
+	@Autowired
 	private Environment env;
 
 	@Override

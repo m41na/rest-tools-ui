@@ -7,7 +7,6 @@ import java.util.Map;
 import com.practicaldime.common.entity.rest.*;
 import com.practicaldime.common.util.AResult;
 import com.practicaldime.plugins.api.Poppin;
-import com.practicaldime.rest.tools.api.ApiReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -99,7 +98,7 @@ public class EndpointsFeaturesImpl implements EndpointsFeatures {
 	}
 
 	@Override
-	public AResult<Integer> deleteAssertiont(Long userId, Long collId, String endpoint, Long assertId) {
+	public AResult<Integer> deleteAssertion(Long userId, Long collId, String endpoint, Long assertId) {
 		return (AResult<Integer>)Poppin.use(service.get()).push("dropAssertion", Long.class, Long.class, String.class, Long.class).call(userId, collId, endpoint, assertId).pop();
 	}
 }

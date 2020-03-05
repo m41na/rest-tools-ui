@@ -8,8 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import javax.inject.Singleton;
-
 @Configuration
 @ComponentScan(basePackages="com.jarredweb.rest.tools.ui")
 public class RestUIConfig {
@@ -20,7 +18,6 @@ public class RestUIConfig {
 	}
 
 	@Bean
-	@Singleton
 	public PluginCentral pluginCentral(@Autowired Pluggable plugs) {
 		return new PluginCentral(plugs.getSources());
 	}

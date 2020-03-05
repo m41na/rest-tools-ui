@@ -2,7 +2,6 @@ package com.jarredweb.rest.tools.ui.features;
 
 import com.practicaldime.common.entity.rest.*;
 import com.practicaldime.common.util.AResult;
-import com.practicaldime.rest.tools.api.ApiReq;
 
 import java.io.InputStream;
 import java.util.List;
@@ -42,5 +41,5 @@ public interface EndpointsFeatures {
 
 	AResult<Integer> updateAssertion(Long userId, Long collId, String endpId, ApiAssert<String> assertion);
 
-	AResult<Integer> deleteAssertiont(Long userId, Long collId, String endpoint, Long assertId);
+	AResult<Integer> deleteAssertion(Long userId, Long collId, String endpoint, Long assertId);
 }
