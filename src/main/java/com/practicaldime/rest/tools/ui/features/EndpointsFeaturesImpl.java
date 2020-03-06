@@ -1,4 +1,4 @@
-package com.jarredweb.rest.tools.ui.features;
+package com.practicaldime.rest.tools.ui.features;
 
 import java.io.InputStream;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.jarredweb.rest.tools.ui.resource;
+package com.practicaldime.rest.tools.ui.resource;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;

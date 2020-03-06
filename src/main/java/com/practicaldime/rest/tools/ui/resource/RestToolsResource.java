@@ -1,7 +1,7 @@
-package com.jarredweb.rest.tools.ui.resource;
+package com.practicaldime.rest.tools.ui.resource;
 
-import com.jarredweb.rest.tools.ui.features.EndpointsFeatures;
-import com.jarredweb.rest.tools.ui.provider.AppUserProvider;
+import com.practicaldime.rest.tools.ui.features.EndpointsFeatures;
+import com.practicaldime.rest.tools.ui.provider.AppUserProvider;
 import com.practicaldime.common.entity.rest.ApiAssert;
 import com.practicaldime.common.entity.rest.ApiReq;
 import com.practicaldime.common.entity.rest.EndpointsList;

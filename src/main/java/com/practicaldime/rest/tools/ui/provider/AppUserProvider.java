@@ -1,11 +1,11 @@
-package com.jarredweb.rest.tools.ui.provider;
+package com.practicaldime.rest.tools.ui.provider;
 
 import com.practicaldime.common.entity.users.Account;
 import com.practicaldime.common.model.AppUser;
 import com.practicaldime.plugins.api.Poppin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import com.jarredweb.rest.tools.ui.features.StartupProvider;
+import com.practicaldime.rest.tools.ui.features.StartupProvider;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Supplier;

@@ -1,4 +1,4 @@
-package com.jarredweb.rest.tools.ui.features;
+package com.practicaldime.rest.tools.ui.features;
 
 import com.practicaldime.plugins.loader.PluginCentral;
 import com.practicaldime.plugins.util.ServiceProvider;
@@ -6,16 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EndpointsProvider implements ServiceProvider {
+public class StartupProvider implements ServiceProvider {
 
 	private PluginCentral central;
-
-	public EndpointsProvider(@Autowired PluginCentral central) {
+	
+	public StartupProvider(@Autowired PluginCentral central) {
 		this.central = central;
 	}
-
+	
 	@Override
 	public Object get() {
-		return central.getInstance("com.jarredweb.plugins.rest.tools.RestToolsPlugin", "persist");
+		return central.getInstance("com.practicaldime.plugins.users.StartupPlugin", "StartupService");
 	}
 }

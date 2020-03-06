@@ -1,4 +1,4 @@
-package com.jarredweb.rest.tools.ui.features;
+package com.practicaldime.rest.tools.ui.features;
 
 import com.practicaldime.common.entity.rest.*;
 import com.practicaldime.common.util.AResult;

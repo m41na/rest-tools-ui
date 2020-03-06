@@ -1,4 +1,4 @@
-package com.jarredweb.rest.tools.ui.config;
+package com.practicaldime.rest.tools.ui.config;
 
 import com.practicaldime.plugins.api.Pluggable;
 import com.practicaldime.plugins.config.PlugConfig;
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan(basePackages="com.jarredweb.rest.tools.ui")
+@ComponentScan(basePackages="com.practicaldime.rest.tools.ui")
 public class RestUIConfig {
 
 	@Bean

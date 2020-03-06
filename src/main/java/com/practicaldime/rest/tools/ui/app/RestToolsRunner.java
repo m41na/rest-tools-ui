@@ -1,7 +1,7 @@
-package com.jarredweb.rest.tools.ui.app;
+package com.practicaldime.rest.tools.ui.app;
 
-import com.jarredweb.rest.tools.ui.config.RestUIConfig;
-import com.jarredweb.rest.tools.ui.resource.RestToolsResource;
+import com.practicaldime.rest.tools.ui.config.RestUIConfig;
+import com.practicaldime.rest.tools.ui.resource.RestToolsResource;
 import com.practicaldime.plugins.api.Poppin;
 import com.practicaldime.plugins.loader.PluginCentral;
 import com.practicaldime.router.core.server.IServer;
@@ -18,8 +18,8 @@ import java.util.function.Function;
 public class RestToolsRunner  {
     
     private static final Logger LOG = LoggerFactory.getLogger(RestToolsRunner.class);
-    private static final String STARTUP_SERVICE_PLUGIN = "com.jarredweb.plugins.users.StartupPlugin";
-    private static final String REST_TOOLS_PLUGIN = "com.jarredweb.plugins.rest.tools.RestToolsPlugin";
+    private static final String STARTUP_SERVICE_PLUGIN = "com.practicaldime.plugins.users.StartupPlugin";
+    private static final String REST_TOOLS_PLUGIN = "com.practicaldime.plugins.rest.RestToolsPlugin";
 
     public static void initApplication(ApplicationContext ctx) {
 		PluginCentral central = ctx.getBean(PluginCentral.class);
@@ -47,6 +47,8 @@ public class RestToolsRunner  {
 
             @Override
             public IServer provide(Map<String, String> map) {
+                map.put("ctx", "/ws");
+                map.put("assets", "www/public");
                 return AppServer.instance(map);
             }
 
