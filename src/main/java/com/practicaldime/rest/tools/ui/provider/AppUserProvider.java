@@ -2,7 +2,7 @@ package com.practicaldime.rest.tools.ui.provider;
 
 import com.practicaldime.common.entity.users.Account;
 import com.practicaldime.common.model.AppUser;
-import com.practicaldime.plugins.api.Poppin;
+import com.practicaldime.plugins.api.PlugStack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import com.practicaldime.rest.tools.ui.features.StartupProvider;
@@ -23,7 +23,7 @@ public class AppUserProvider implements Supplier<AppUser> {
 		Boolean autoLogin = env.getProperty("auto.login.allow", Boolean.TYPE);
 		if (autoLogin) {
 			String username = env.getProperty("auto.login.username");
-			Account account = Poppin.use(service.get()).push("getUserAccount", String.class).call(username).pop(Account.class);
+			Account account = PlugStack.use(service.get()).push("getUserAccount", String.class).call(username).pop(Account.class);
 			if (account != null) {
 				AppUser user = new AppUser(account.getUsername(), account.getProfile().getId(),
 						account.getProfile().getFirstName() + " " + account.getProfile().getLastName());

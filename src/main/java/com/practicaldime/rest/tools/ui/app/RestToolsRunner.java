@@ -1,9 +1,9 @@
 package com.practicaldime.rest.tools.ui.app;
 
+import com.practicaldime.plugins.api.PlugStack;
+import com.practicaldime.plugins.loader.PluginCentral;
 import com.practicaldime.rest.tools.ui.config.RestUIConfig;
 import com.practicaldime.rest.tools.ui.resource.RestToolsResource;
-import com.practicaldime.plugins.api.Poppin;
-import com.practicaldime.plugins.loader.PluginCentral;
 import com.practicaldime.router.core.server.IServer;
 import com.practicaldime.router.core.server.Rest;
 import com.practicaldime.router.http.app.AppServer;
@@ -15,23 +15,23 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import java.util.Map;
 import java.util.function.Function;
 
-public class RestToolsRunner  {
-    
+public class RestToolsRunner {
+
     private static final Logger LOG = LoggerFactory.getLogger(RestToolsRunner.class);
     private static final String STARTUP_SERVICE_PLUGIN = "com.practicaldime.plugins.users.StartupPlugin";
-    private static final String REST_TOOLS_PLUGIN = "com.practicaldime.plugins.rest.RestToolsPlugin";
+    private static final String REST_TOOLS_PLUGIN = "com.practicaldime.plugins.rest.tools.RestToolsPlugin";
 
     public static void initApplication(ApplicationContext ctx) {
-		PluginCentral central = ctx.getBean(PluginCentral.class);
-		//load startup plugin
-		central.loadPlugin(STARTUP_SERVICE_PLUGIN);
-		central.discoverFeatures(STARTUP_SERVICE_PLUGIN);
-		//now invoke 'initialize' on StartupService
-    	Object startup = central.getInstance(STARTUP_SERVICE_PLUGIN, "StartupService");
-		Poppin.use(startup).push("initialize").call().pop();
+        PluginCentral central = ctx.getBean(PluginCentral.class);
+        //load startup plugin
+        central.loadPlugin(STARTUP_SERVICE_PLUGIN);
+        central.discoverFeatures(STARTUP_SERVICE_PLUGIN);
+        //now invoke 'initialize' on StartupService
+        Object startup = central.getInstance(STARTUP_SERVICE_PLUGIN, "StartupService");
+        PlugStack.use(startup).push("initialize", null).call().pop();
         //load rest tools plugin
         central.loadPlugin(REST_TOOLS_PLUGIN);
-		central.discoverFeatures(REST_TOOLS_PLUGIN);
+        central.discoverFeatures(REST_TOOLS_PLUGIN);
     }
 
     public static void main(String... args) {
@@ -43,7 +43,7 @@ public class RestToolsRunner  {
         initApplication(ctx);
         RestToolsResource resources = ctx.getBean(RestToolsResource.class);
 
-        Rest rest = new Rest(){
+        Rest rest = new Rest() {
 
             @Override
             public IServer provide(Map<String, String> map) {
